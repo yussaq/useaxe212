@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../patrials/head'); %>
+</head>
+<body>
+  <header>
+    <%- include('../patrials/header'); %>
+  </header>
+  <main>
+    <%- include('../patrials/title'); %>
+    <div class="py-5 bg-light">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">                                                      
+          <% collect.forEach(function(item) { %>
+            <div class="col">
+              <div class="card shadow-sm">
+                  <img src="./asset/collections/<%= item.file %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                      <div><small class="text-muted">CollectionName <%= item.name %> </small></div>
+                      <small class="text-muted">Price 0.001</small>                        
+                  </div>
+            </div>                            
+          </div>               
+          <% }) %>
+        </div>            
+      </div>        
+    </div>
+  </main>
+  <footer>
+    <%- include('../patrials/footer'); %>
+  </footer>
+</body>
+</html>
