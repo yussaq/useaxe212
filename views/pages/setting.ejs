@@ -10,35 +10,36 @@
     <main>
         <%- include('../patrials/title'); %>        
         <div class="container">
-        <form>
+        <form action="/setting/update" method="post"> 
+            <input type="hidden" name="id" id="collection_id" value="<%= setting.id %>">
             <div class="row mb-3">
                 <label for="collection_name" class="col-sm-2 col-form-label">Collections Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="collection_name" id="collection_name">
+                    <input type="text" class="form-control" name="name" id="collection_name" value="<%= setting.name %>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="collection_description" class="col-sm-2 col-form-label">Description</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="collection_description" id="collection_description">
+                    <input type="text" class="form-control" name="description" id="collection_description" value="<%= setting.description %>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="collection_ipfs" class="col-sm-2 col-form-label">IPFS</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="collection_ipfs" id="collection_ipfs">
+                    <input type="text" class="form-control" name="ipfs" id="collection_ipfs" value="<%= setting.ipfs %>">
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="collection_attributes" class="col-sm-2 col-form-label">IPFS</label>
+                <label for="collection_attributes" class="col-sm-2 col-form-label">Attributes</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="collection_attributes" id="collection_attributes">
+                    <input type="text" class="form-control" name="attributes" id="collection_attributes" value="<%= setting.attributes %>">
                 </div>
             </div>            
             <div class="row mb-3">
                 <label for="collection_creator" class="col-sm-2 col-form-label">Creator</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="collection_creator" id="collection_creator">
+                    <input type="text" class="form-control" name="creator" id="collection_creator" value="<%= setting.creator %>">
                 </div>
             </div>           
             <div class="row mb-3">
@@ -47,8 +48,8 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>           
-          </form>
-          </div>
+        </form>
+        </div>
     </main>
     <footer>
         <%- include('../patrials/footer'); %>

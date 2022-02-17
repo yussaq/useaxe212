@@ -1,6 +1,1 @@
-{
-    "name": "my-collections",
-    "description": "My Ntfs collection",
-    "ipfs": "ipfs-address",
-    "creator": "Yussaq NF"
-}
+[{"id":"1","name":"my collection","description":"nft collection ","ipfs":"https://","creator":"Yussaq NF","attributes":"background,body,hair,eyes"}]
