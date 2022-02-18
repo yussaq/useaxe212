@@ -17,9 +17,11 @@ router.get('/attributes', getAttribute)
 
 /* Setting Page */
 const  { 
-    getSetting 
+    getSetting,
+    updateSetting 
 } = require('../controllers/settingController.js')
 router.get('/setting', getSetting)
+router.post('/setting/update', updateSetting)
 
 /* Metadata page */
 const  { 
