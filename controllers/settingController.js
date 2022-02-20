@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const basePath = process.cwd();
 const fs = require("fs");
-const fileName = `${basePath}/public/asset/json/setting.json`;  
+const fileName = `${basePath}/public/asset/json/setting.json`;
 const data = JSON.parse(fs.readFileSync(fileName));
 const getSetting = ((req, res, next) => {
     if (data === undefined || data.length == 0) {
@@ -16,7 +16,7 @@ const getSetting = ((req, res, next) => {
         }];
         data=newdata; 
     }
-    res.render(`${basePath}/views/pages/setting.ejs`, { 
+    res.render(`${basePath}/views/pages/setting.ejs`, {
         title:'Setting',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 
         setting :data[0]
@@ -44,6 +44,14 @@ const updateSetting = ((req, res, next) => {
             console.log(err);
         });            
     });
+    tabArray = req.body.attributes.split(',');
+
+    tabArray.forEach((item,index)  => {        
+        if (!fs.existsSync(`${basePath}/public/asset/attributes/${item}`)) {
+            fs.mkdirSync(`${basePath}/public/asset/attributes/${item}`);
+        }
+    });
+    //console.dir(req, { depth: null})    
     res.redirect(301,'/attributes');
 })
 module.exports = {
