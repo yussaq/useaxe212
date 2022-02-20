@@ -1,5 +1,9 @@
 var express = require('express');
+const basePath = process.cwd();
 var router = express.Router();
+const multer = require("multer");
+var upload = multer({ dest: `${basePath}/public/asset/attributes` })
+
 
 /* Home Page */
 const  {  
@@ -11,9 +15,12 @@ router.get('/home', getHomepage)
 
 /* Attribute Page */
 const  {  
-    getAttribute
+    getAttribute,
+    uploadAttribute
 } = require('../controllers/attributeController.js')
 router.get('/attributes', getAttribute)
+router.post('/attributes/upload', uploadAttribute)
+//router.post('/attributes/uploadfile', uploadAttribute)
 
 /* Setting Page */
 const  { 

@@ -10,42 +10,89 @@
     <main>
         <%- include('../patrials/title'); %>        
         <div class="container">
-         
-            <ul class="nav nav-tabs justify-content-center" id="myTab">
+            <form id="ul-widget" action="/attributes/upload" class="dropzone" enctype="multipart/form-data">
+                <input id="layer"  name="layer" type="hidden" value="" multiple />
+                <div class="fallback">
+                  <input name="file" type="file" multiple />
+                </div>
+                <button type="button" id="btnUpload" class="btn btn-primary">Save</button>
+            </form>
+            <ul class="nav nav-tabs justify-content-center mt-4" id="myTab">
+            <% tab.forEach((item,index)  => { %>
                 <li class="nav-item">
-                    <a href="#background" class="nav-link active" data-bs-toggle="tab">Background</a>
+                    <a href="#<%= item %>" class="nav-link <% if (index == 0) { %> active <% } %> " data-bs-toggle="tab"><%= item %></a>
                 </li>
-                <li class="nav-item">
-                    <a href="#body" class="nav-link" data-bs-toggle="tab">body</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#hair" class="nav-link" data-bs-toggle="tab">hair</a>
-                </li>
+            <%  }) %> 
             </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="background">
-                    <h4 class="mt-2">Home tab content</h4>
-                    <form action="/file-upload"
-                    class="dropzone"
-                    id="my-awesome-dropzone">
-                    <input type="file" name="file" />
-                </form>
-
-                    <p>Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
-                </div>
-                <div class="tab-pane fade" id="body">
-                    <h4 class="mt-2">Profile tab content</h4>
-                    <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
-                </div>
-                <div class="tab-pane fade" id="hair">
-                    <h4 class="mt-2">Messages tab content</h4>
-                    <p>Donec vel placerat quam, ut euismod risus. Sed a mi suscipit, elementum sem a, hendrerit velit. Donec at erat magna. Sed dignissim orci nec eleifend egestas. Donec eget mi consequat massa vestibulum laoreet. Mauris et ultrices nulla, malesuada volutpat ante. Fusce ut orci lorem. Donec molestie libero in tempus imperdiet. Cum sociis natoque penatibus et magnis.</p>
-                </div>
-            </div>
+            <div class="tab-content">           
+            <% tab.forEach((item,index)  => { %>
+                <div class="tab-pane fade <% if (index == 0) { %> show active <% } %>" id="<%= item %>">
+                    <h4 class="mt-2"><%= item %></h4>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">                                                      
+                        <% dataAttribute[item].forEach(function(itematribute) { %>
+                          <div class="col">
+                            <div class="card shadow-sm">
+                                <img src="./asset/attributes/<%= item %>/<%= itematribute %>" class="card-img-top" alt="/public/asset/attribute/<%= item %>/<%= itematribute %>">
+                                <div class="card-body text-center">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="checkatribute[]" value="<%= item %>/<%= itematribute %>" />
+                                        <label class="form-check-label" for="inlineCheckbox1"><%= itematribute %> </label>
+                                      </div>
+                                </div>
+                          </div>                            
+                        </div>               
+                        <% }) %>
+                      </div>                       
+                </div>            
+            <%  }) %> 
+            </div>        
         </div>
     </main>
     <footer>
         <%- include('../patrials/footer'); %>
     </footer>
+    <script type="text/javascript">
+        Dropzone.options.ulWidget = {
+            paramName: 'file',
+            acceptedFiles: 'image/*',
+            autoProcessQueue: false,
+            parallelUploads: 30,
+            addRemoveLinks:false,
+            init: function() {
+                submitButton = document.querySelector("#btnUpload")
+                myDropzone = this;
+                submitButton.addEventListener("click", function() {
+                    myDropzone.processQueue();
+                });            
+                // Execute when file uploads are complete
+                this.on("success", function(file, response) {
+                    this.removeFile(file);
+                });
+            }
+        }; 
+
+        var tabEl = document.querySelectorAll('a[data-bs-toggle="tab"]')
+        tabEl.forEach(function(el){
+            el.addEventListener('shown.bs.tab', function (event) {
+                document.querySelector("#layer").value=event.target.text
+            })
+        if (el.querySelector('a.active') !== null) {
+            document.querySelector("#layer").value=event.target.text
+            //document.querySelector('#myTab a.active').classList.remove('active');
+        }
+        })       
+
+        if (document.querySelector('#myTab a.active') !== null) {
+            document.querySelector("#layer").value=event.target.text
+            //document.querySelector('#myTab a.active').classList.remove('active');
+        }
+
+        (function() {
+            if (document.querySelector('#myTab a.active') !== null) {
+                document.querySelector("#layer").value=event.target.text
+                //document.querySelector('#myTab a.active').classList.remove('active');
+            }
+        })();  
+    </script>
 </body>
 </html>
