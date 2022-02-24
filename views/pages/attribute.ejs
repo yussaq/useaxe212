@@ -10,6 +10,7 @@
     <main>
         <%- include('../patrials/title'); %>        
         <div class="container">
+            <% if(tab.length > 1 || tab[0] != "" ){ %>
             <form id="ul-widget" action="/attributes/upload" class="dropzone" enctype="multipart/form-data">
                 <input id="layer"  name="layer" type="hidden" value="" multiple />
                 <div class="fallback">
@@ -17,7 +18,7 @@
                 </div>
                 <button type="button" id="btnUpload" class="btn btn-primary">Save</button>
             </form>
-            <ul class="nav nav-tabs justify-content-center mt-4" id="myTab">
+            <ul class="nav nav-tabs justify-content-center mt-4" id="layerTab">
             <% tab.forEach((item,index)  => { %>
                 <li class="nav-item">
                     <a href="#<%= item %>" class="nav-link <% if (index == 0) { %> active <% } %> " data-bs-toggle="tab"><%= item %></a>
@@ -28,24 +29,34 @@
             <% tab.forEach((item,index)  => { %>
                 <div class="tab-pane fade <% if (index == 0) { %> show active <% } %>" id="<%= item %>">
                     <h4 class="mt-2"><%= item %></h4>
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">                                                      
-                        <% dataAttribute[item].forEach(function(itematribute) { %>
-                          <div class="col">
-                            <div class="card shadow-sm">
-                                <img src="./asset/attributes/<%= item %>/<%= itematribute %>" class="card-img-top" alt="/public/asset/attribute/<%= item %>/<%= itematribute %>">
-                                <div class="card-body text-center">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="checkatribute[]" value="<%= item %>/<%= itematribute %>" />
-                                        <label class="form-check-label" for="inlineCheckbox1"><%= itematribute %> </label>
-                                      </div>
-                                </div>
-                          </div>                            
-                        </div>               
-                        <% }) %>
-                      </div>                       
+                    <form action="/attributes/delete" method="post">
+                        <input id="layer"  name="layer" type="hidden" value="<%= item %>" multiple />
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">                                                      
+                            <% dataAttribute[item].forEach(function(itematribute) { %>
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <img src="./asset/attributes/<%= item %>/<%= itematribute %>" class="card-img-top" alt="/public/asset/attribute/<%= item %>/<%= itematribute %>">
+                                    <div class="card-body text-center">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="checkatribute[]" name="checkatribute[]" value="<%= itematribute %>" />
+                                            <label class="form-check-label" for="inlineCheckbox1"><%= itematribute %> </label>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>               
+                            <% }) %>
+                        </div>   
+                        <div class="row row-cols-1 mt-4">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" id="btnDelete" class="btn btn-danger">Delete</button>
+                            </div>                        
+                        </div>
+
+                    </form>                      
                 </div>            
             <%  }) %> 
-            </div>        
+            </div>      
+            <% } %>  
         </div>
     </main>
     <footer>
@@ -67,32 +78,29 @@
                 // Execute when file uploads are complete
                 this.on("success", function(file, response) {
                     this.removeFile(file);
+                    location.reload(); 
                 });
             }
         }; 
 
         var tabEl = document.querySelectorAll('a[data-bs-toggle="tab"]')
+        //localStorage.setItem('activeTab', '#face');
         tabEl.forEach(function(el){
             el.addEventListener('shown.bs.tab', function (event) {
-                document.querySelector("#layer").value=event.target.text
-            })
-        if (el.querySelector('a.active') !== null) {
-            document.querySelector("#layer").value=event.target.text
-            //document.querySelector('#myTab a.active').classList.remove('active');
-        }
+                localStorage.setItem('activeTab', this.getAttribute("href"));
+                document.querySelector("#layer").value=event.target.text;
+                console.log(this.getAttribute("href"));
+            });
         })       
+        document.querySelector("#layer").value=document.querySelector("a.nav-link.active").text
 
-        if (document.querySelector('#myTab a.active') !== null) {
-            document.querySelector("#layer").value=event.target.text
-            //document.querySelector('#myTab a.active').classList.remove('active');
+        var activeTab = window.localStorage.getItem('activeTab');
+        if (activeTab) {
+            document.querySelector("a[href='"+activeTab+"']").click();
+            localStorage.removeItem("activeTab");
         }
 
-        (function() {
-            if (document.querySelector('#myTab a.active') !== null) {
-                document.querySelector("#layer").value=event.target.text
-                //document.querySelector('#myTab a.active').classList.remove('active');
-            }
-        })();  
     </script>
+</script>
 </body>
 </html>

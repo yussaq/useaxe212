@@ -3,7 +3,7 @@ const router = express.Router();
 const basePath = process.cwd();
 const fs = require("fs");
 const multer = require("multer");
-const upload = multer({ dest: `${basePath}/public/asset/attributes` })
+//const upload = multer({ dest: `${basePath}/public/asset/attributes` })
 const fileUpload= require('../middlewares/upload-middleware');
 
 const storage = multer.diskStorage({
@@ -15,70 +15,75 @@ const storage = multer.diskStorage({
   }
 });
 
-// Json file
-const fileAttributes = `${basePath}/public/asset/json/attributes.json`; 
-const fileSetting = `${basePath}/public/asset/json/setting.json`;  
-const dataAttributes = JSON.parse(fs.readFileSync(fileAttributes));
-const dataSetting = JSON.parse(fs.readFileSync(fileSetting));
-
-const tabs = dataSetting[0].attributes;
 const getAttribute = ((req, res, next) => {
-    const fileAttributes = [];
-    const dirAttribute = [];
+    const fileAttributes = `${basePath}/public/asset/json/attributes.json`; 
+    const fileSetting = `${basePath}/public/asset/json/setting.json`;  
+    const dataAttributes = JSON.parse(fs.readFileSync(fileAttributes));
+    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
+    ///const dirAttribute = [];
     const arrayAttribute = [];
-/*     
-    fs.readdirSync(`${basePath}/public/asset/attributes`).forEach(file => {
-        fileAttributes.push(file);
-        console.log(file);
-        fs.readdirSync(`${basePath}/public/asset/attributes/${file}`).forEach(file => {
-            console.log('--'+file);
-            fileAttributes.push(file);
-        });
-        fileAttributes.push(file);
-    });
- */
+    const tabs = dataSetting[0].attributes;
+
     tabArray = tabs.split(',');
     tabArray.forEach((item,index)  => {   
         arrayAttribute[item] = [];     
         fs.readdirSync(`${basePath}/public/asset/attributes/${item}`).forEach(file => {
-            //console.log('--'+file);
             arrayAttribute[item].push(file);
         });
-        //console.log(arrayAttribute);        
     });    
 
+    //console.log(JSON.stringify(tabArray, null, 2));
     res.render(`${basePath}/views/pages/attribute.ejs`, { 
         title:'Attributes',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 
+        description: 'Yours assets/attributes can create max xxx collections, target xxx collections, you have xxx collection now.', 
         collect :dataAttributes,
         tab:tabArray,
         dataAttribute: arrayAttribute
     });
-//console.log(fileAttributes);
-
 })
 
-const uploadAttribute = ((req, res) => {  
-    //console.dir(req, { depth: null    })  
+const uploadAttribute = ((req, res, next) => {  
     var upload = multer({
             storage: fileUpload.files.storage(), 
             allowedFile:fileUpload.files.allowedFile 
         }).single('file');
-    
+        res.redirect('/attributes');    
         upload(req, res, function (err) {
-        //console.dir(req.body.layer, { depth: null })  
-        if (err instanceof multer.MulterError) {
-            res.send(err);
-        } else if (err) {
-            res.send(err);
-        }else{
-        //console.log("upladFile : "+ req.file.filename+" done.")
+            if (err instanceof multer.MulterError) {
+                res.send(err);
+            } else if (err) {
+                res.send(err);
+            }
+        });
+    //res.status(200).send(req.file);
+    res.redirect('/attributes');
+});
+
+const deleteAttribute = ((req, res, next) => {  
+
+    req.body.checkatribute.forEach((item,index)  => {        
+        var pathfile = `${basePath}/public/asset/attributes/${req.body.layer}/${item}`;
+        console.log(pathfile);
+
+        if (fs.existsSync(pathfile)) {
+            //fs.mkdirSync(`${basePath}/public/asset/attributes/${item}`);
+            console.log('File deleted!');
+            fs.unlink(pathfile, function (err) {
+                if (err) throw err;
+
+                console.log('File deleted!');
+            }); 
         }
-    })
-    res.status(200).send(req.file);
+
+    });  
+
+
+    //res.send(pathfile);
+    res.redirect('/attributes');
 });
 
 module.exports = {
     getAttribute,
-    uploadAttribute
+    uploadAttribute,
+    deleteAttribute
 }

@@ -16,11 +16,12 @@ router.get('/home', getHomepage)
 /* Attribute Page */
 const  {  
     getAttribute,
-    uploadAttribute
+    uploadAttribute,
+    deleteAttribute,
 } = require('../controllers/attributeController.js')
 router.get('/attributes', getAttribute)
 router.post('/attributes/upload', uploadAttribute)
-//router.post('/attributes/uploadfile', uploadAttribute)
+router.post('/attributes/delete', deleteAttribute)
 
 /* Setting Page */
 const  { 
@@ -29,6 +30,18 @@ const  {
 } = require('../controllers/settingController.js')
 router.get('/setting', getSetting)
 router.post('/setting/update', updateSetting)
+
+
+/* Tools Page */
+const  { 
+    getTools,
+    postGenerate,
+    postReset 
+} = require('../controllers/toolsController.js')
+router.get('/tools', getTools)
+router.post('/tools/generate', postGenerate)
+router.post('/tools/reset', postReset)
+
 
 /* Metadata page */
 const  { 
