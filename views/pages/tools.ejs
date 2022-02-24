@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../patrials/head'); %>
+</head>
+<body>
+    <header>
+        <%- include('../patrials/header'); %>
+    </header>
+    <main>
+        <%- include('../patrials/title'); %>
+        <div class="py-5 bg-light">
+            <div class="container">
+               
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <i class="fa-solid fa-wand-magic-sparkles"> </i>&nbsp;<strong> Generate</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body"><p>
+                                Yours assets/attributes can create <span class="text-info"> max xxx </span> collections, <span class="text-success"> target xxx </span> collections, you <span class="text-primary">  have xxx </span> collection now
+                            </p>
+                                <form action="/tools/generate" method="post"> 
+                                    <input type="hidden" name="id"  value="">
+                                    <div class="row mb-3">
+                                        <label for="collection_name" class="col-sm-2 col-form-label">ffmpeg path</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="ffmpeg_path" id="ffmpeg_path" value="/usr/bin/ffmpeg">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+                                        <div class="col-sm-1">
+                                            <input type="text" class="form-control" name="quantity" id="quantity" value="">
+                                        </div>
+                                    </div>      
+                                    <div class="row mb-3">
+                                        <label for="collection_creator" class="col-sm-2 col-form-label">&nbsp;</label>
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Generate</button>
+                                        </div>
+                                    </div>           
+                                </form>  
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <strong ><i class="fa-solid fa-upload"></i>  Upload ipfs</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <form action="https://api.pinata.cloud/pinning/pinFileToIPFS" method="post"> 
+                                    <input type="hidden" name="id" id="collection_id" value="">
+                                    <div class="row mb-3">
+                                        <label for="collection_name" class="col-sm-2 col-form-label">Api Key</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pinata_api_key" id="api_key" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="collection_description" class="col-sm-2 col-form-label">Secret Api Key</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pinata_secret_api_key" id="secret_api_key" value="">
+                                        </div>
+                                    </div>      
+                                    <div class="row mb-3">
+                                        <label for="collection_creator" class="col-sm-2 col-form-label">&nbsp;</label>
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>           
+                                </form>  
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <strong ><i class="fa-solid fa-rotate-left"></i> Reset</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div class="accordion-body text-center">
+                                <strong>Attention  </strong> Reset collections it will delete your collection and data you have generate, can't be undo.
+                                <div class="text-center">
+                                    <form action="/tools/reset" method="post">
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                                            Reset
+                                          </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmModalLabel">Reset Collections</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                Are yoou sure to reset !
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                                                <button id="btnreset" type="submit" class="btn btn-danger">OK</button>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
+            </div>        
+        </div>
+    </main>
+    <footer>
+        <%- include('../patrials/footer'); %>
+    </footer>
+<script>
+    $('#btnreset').on('click', function () {
+        $(this).parents('form').submit();
+    });
+</script>
+</body>
+
+</html>
