@@ -2,15 +2,31 @@ const express = require('express');
 const router = express.Router();
 const basePath = process.cwd();
 const fs = require("fs");
-const fileName = `${basePath}/public/asset/json/setting.json`;
-const data = JSON.parse(fs.readFileSync(fileName));
+
+//let data = JSON.parse(fs.readFileSync(fileName, 'utf8'));
+
+
+var readJson = (fileName, cb) => {
+    fs.readFile(require.resolve(fileName), (err, data) => {
+      if (err)
+        cb(err)
+      else
+        cb(null, JSON.parse(data))
+    })
+  }
+
+
+    
 const getSetting = ((req, res, next) => {
+    var fileName = `${basePath}/public/asset/json/setting.json`;    
+    var data = JSON.parse(fs.readFileSync(fileName, 'utf8'));
     if (data === undefined || data.length == 0) {
         const newdata = [{ 
             id: 1,
             name: 'my collection',
             description : 'my best collection',
-            ipfs :'https://',
+            quantity : 100,
+            ipfs : 'https://',
             creator: 'Yussaq NF',
             attributes : 'background'
         }];
@@ -24,36 +40,42 @@ const getSetting = ((req, res, next) => {
 });
 
 const updateSetting = ((req, res, next) => {
-    const newdata = { 
+    var fileName = `${basePath}/public/asset/json/setting.json`;    
+    var newdata = { 
         id: req.body.id,
         name: req.body.name,
         description : req.body.description,
+        quantity : req.body.quantity,
         ipfs :req.body.ipfs,
         creator: req.body.creator,
         attributes : req.body.attributes
     };
   
-    const formdata = req.body;    
-    const datasetting = [];
-    fs.readFile(fileName, (err, data) => { // get the data from the file
-        if (data === undefined || data.length == 0) {
-            res.send({msg: 'Setting data updated error'})             
-        }
-        datasetting.push(newdata);
-        fs.writeFile(fileName, JSON.stringify(datasetting), (err) => {
-            console.log(err);
-        });            
-    });
+    var formdata = req.body;    
+    var datasetting = [];
+    datasetting.push(newdata);
+    fs.writeFile(fileName, JSON.stringify(datasetting), (err) => {
+        if (err)
+        console.log(err);
+    });            
+
     tabArray = req.body.attributes.split(',');
 
+    if (!fs.existsSync(`${basePath}/public/asset/attributes`)) {
+        fs.mkdirSync(`${basePath}/public/asset/attributes`);
+    }
+    if (!fs.existsSync(`${basePath}/public/asset/collections`)) {
+        fs.mkdirSync(`${basePath}/public/asset/collections`);
+    }  
+        
     tabArray.forEach((item,index)  => {        
         if (!fs.existsSync(`${basePath}/public/asset/attributes/${item}`)) {
             fs.mkdirSync(`${basePath}/public/asset/attributes/${item}`);
         }
-    });
-    //console.dir(req, { depth: null})    
+    });    
     res.redirect(301,'/attributes');
 })
+
 module.exports = {
     getSetting,
     updateSetting

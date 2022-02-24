@@ -19,7 +19,7 @@ app.use(express.static(`${basePath}/tmp`))
 //app.use(multer({ dest: `${basePath}/public/asset/attributes`}));
 
 //app.use(logger('dev'))
-app.use(cookieParser())
+//app.use(cookieParser())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 /* Routing */

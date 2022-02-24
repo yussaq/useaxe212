@@ -25,6 +25,12 @@
                 </div>
             </div>
             <div class="row mb-3">
+                <label for="collection_description" class="col-sm-2 col-form-label">Target</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="quantity" id="collection_description" value="<%= setting.quantity %>">
+                </div>
+            </div>            
+            <div class="row mb-3">
                 <label for="collection_ipfs" class="col-sm-2 col-form-label">IPFS</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="ipfs" id="collection_ipfs" value="<%= setting.ipfs %>">
@@ -48,7 +54,7 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>           
-        </form>
+        </form>        
         </div>
     </main>
     <footer>
