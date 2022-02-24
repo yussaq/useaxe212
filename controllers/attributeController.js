@@ -32,7 +32,7 @@ const getAttribute = ((req, res, next) => {
         });
     });    
 
-    //console.log(JSON.stringify(tabArray, null, 2));
+    console.log(JSON.stringify(tabArray, null, 2));
     res.render(`${basePath}/views/pages/attribute.ejs`, { 
         title:'Attributes',
         description: 'Yours assets/attributes can create max xxx collections, target xxx collections, you have xxx collection now.', 
