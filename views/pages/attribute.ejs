@@ -11,13 +11,19 @@
         <%- include('../patrials/title'); %>        
         <div class="container">
             <% if((tab.length > 1 && tab[0] != "" ) || tab[0] != "" ){ %>
-            <form id="ul-widget" action="/attributes/upload" class="dropzone" enctype="multipart/form-data">
+                <div class="text-center">
+                    <form id="ul-widget" action="/attributes/permutation" method="post">
+                        <button type="submit" id="btnPermutation" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+                <form id="ul-widget" action="/attributes/upload" class="dropzone mt-4" enctype="multipart/form-data">
                 <input id="layer"  name="layer" type="hidden" value="" multiple />
                 <div class="fallback">
                   <input name="file" type="file" multiple />
                 </div>
                 <button type="button" id="btnUpload" class="btn btn-primary">Save</button>
             </form>
+
             <ul class="nav nav-tabs justify-content-center mt-4" id="layerTab">
             <% tab.forEach((item,index)  => { %>
                 <li class="nav-item">
