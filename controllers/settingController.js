@@ -14,8 +14,6 @@ var readJson = (fileName, cb) => {
         cb(null, JSON.parse(data))
     })
   }
-
-
     
 const getSetting = ((req, res, next) => {
     var fileName = `${basePath}/public/asset/json/setting.json`;    
@@ -25,7 +23,7 @@ const getSetting = ((req, res, next) => {
             id: 1,
             name: 'my collection',
             description : 'my best collection',
-            quantity : 100,
+            quantity : 10,
             ipfs : 'https://',
             creator: 'Yussaq NF',
             attributes : 'background'

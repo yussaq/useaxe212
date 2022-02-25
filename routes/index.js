@@ -18,10 +18,12 @@ const  {
     getAttribute,
     uploadAttribute,
     deleteAttribute,
+    permutationAttribute
 } = require('../controllers/attributeController.js')
 router.get('/attributes', getAttribute)
 router.post('/attributes/upload', uploadAttribute)
 router.post('/attributes/delete', deleteAttribute)
+router.post('/attributes/permutation', permutationAttribute)
 
 /* Setting Page */
 const  { 
