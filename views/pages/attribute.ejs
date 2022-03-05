@@ -17,12 +17,15 @@
                     </form>
                 </div>
                 <form id="ul-widget" action="/attributes/upload" class="dropzone mt-4" enctype="multipart/form-data">
-                <input id="layer"  name="layer" type="hidden" value="" multiple />
-                <div class="fallback">
-                  <input name="file" type="file" multiple />
-                </div>
-                <button type="button" id="btnUpload" class="btn btn-primary">Save</button>
-            </form>
+                    <input id="layer"  name="layer" type="hidden" value="" multiple />
+                    <div class="fallback">
+                        <input name="file" type="file" multiple />
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" id="btnUpload" class="btn btn-primary">Save</button>
+                    </div>                    
+                    
+                </form>
 
             <ul class="nav nav-tabs justify-content-center mt-4" id="layerTab">
             <% tab.forEach((item,index)  => { %>
