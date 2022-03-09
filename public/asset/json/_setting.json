@@ -1,0 +1,11 @@
+[
+  {
+    "id": "1",
+    "name": "my collection",
+    "description": "my best collection",
+    "quantity": "100",
+    "ipfs": "https://",
+    "creator": "Yussaq NF",
+    "attributes": "background"
+  }
+]
