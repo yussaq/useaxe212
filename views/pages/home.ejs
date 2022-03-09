@@ -1,51 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('../patrials/head'); %>
+    <%- include('../patrials/head'); %>
 </head>
 <body>
-  <header>
-    <%- include('../patrials/header'); %>
-  </header>
-  <main>
-    <%- include('../patrials/title'); %>
-    <div class="py-5 bg-light">
-      <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">                                                      
-          <% collect.forEach(function(item) { %>
-            <div class="col">
-              <div class="card shadow-sm">
-                  <img src="./asset/collections/<%= item.file %>" class="card-img-top" alt="...">
-                  <div class="card-body">
-                      <div><small class="text-muted">CollectionName <%= item.name %> </small></div>
-                      <small class="text-muted">Price 0.001</small>                        
-                  </div>
-            </div>                            
-          </div>               
-          <% }) %>
-        </div>   
-        
-        <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+    <header>
+        <%- include('../patrials/header'); %>
+    </header>
+    <main>
+        <%- include('../patrials/title'); %>
+        <div class="py-5 bg-light">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">                                                      
+                    <% data.forEach(function(item) { %>
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <img data-bs-toggle="modal" data-bs-target="#imageModal"  src="/asset/collections/<%= item.edition %>.<%= item.type %>" class="card-img-top" alt="<%= item.edition %>.<%= item.type %>">
+                                <div class="card-body">
+                                    <div><small class="text-muted"><%= item.name %></small></div>
+                                </div>
+                             </div>                            
+                        </div>               
+                    <% }) %>
+                </div>   
 
-      </div>        
+                <% if (pages > 0) { %>
+                    <nav class="py-4" aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <% if (current == 1) { %>
+                                    <li class="page-item disabled">            
+                                        <a class="page-link disabled" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                            <% } else { %>
+                                    <li class="page-item"><a class="page-link" href="/home/1">First</a></li>
+                            <% } %>
+                            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                            <% if (i !== 1) { %>
+                                    <li class="page-item disabled"><a class="page-link">...</a></li>                  
+                            <% } %>
+                            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                                    <% if (i == current) { %>
+                                            <li class="page-item active"><a class="page-link"><%= i %></a></li>                      
+                                    <% } else { %>
+                                            <li class="page-item"><a class="page-link" href="/home/<%= i %>"><%= i %></a></li>
+                                    <% } %>
+                                    <% if (i == Number(current) + 4 && i < pages) { %>
+                                            <li class="page-item disabled"><a class="page-link">...</a></li> 
+                                    <% } %>
+                            <% } %>
+                            <% if (current == pages) { %>
+                                    <li class="page-item disabled"><a class="page-link">Last</a></li>
+                            <% } else { %>
+                                    <li class="page-item "><a class="page-link" href="/home/<%= pages %>">Last</a></li>
+                            <% } %>
+                        </ul>
+                    </nav>
+            <% } %>
+            </div>        
+        </div>
+    </main>
+   
+    <!-- Modal -->
+    <div class="modal fade"  id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-lg">          
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="item"><img class="rounded mx-auto d-block" id="imgSrc" src="" /></div>
+            </div>
+        </div>
+        </div>
     </div>
-  </main>
-  <footer>
-    <%- include('../patrials/footer'); %>
-  </footer>
+
+    <footer>
+        <%- include('../patrials/footer'); %>
+    </footer>
 </body>
+<script >   
+    const imageModalEl = document.getElementById('imageModal');
+    imageModalEl.addEventListener('show.bs.modal', function(event) {
+        document.getElementById('imgSrc').src = event.relatedTarget.src;
+    });
+</script>
 </html>

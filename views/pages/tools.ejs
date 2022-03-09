@@ -41,7 +41,7 @@
                                     <div class="row mb-3">
                                         <label for="collection_creator" class="col-sm-2 col-form-label">&nbsp;</label>
                                         <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary">Generate</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Generate</button>
                                         </div>
                                     </div>           
                                 </form>  
@@ -56,24 +56,30 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <form action="https://api.pinata.cloud/pinning/pinFileToIPFS" method="post"> 
+                                <form action="/tools/pin-file-to-ipfs" method="post"> 
                                     <input type="hidden" name="id" id="collection_id" value="">
                                     <div class="row mb-3">
                                         <label for="collection_name" class="col-sm-2 col-form-label">Api Key</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="pinata_api_key" id="api_key" value="">
+                                            <input type="text" class="form-control" name="pinataApiKey" id="api_key" value="">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="collection_description" class="col-sm-2 col-form-label">Secret Api Key</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="pinata_secret_api_key" id="secret_api_key" value="">
+                                            <input type="text" class="form-control" name="pinataSecretApiKey" id="secret_api_key" value="">
                                         </div>
                                     </div>      
                                     <div class="row mb-3">
+                                        <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" name="quantity" id="quantitytoupload" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label for="collection_creator" class="col-sm-2 col-form-label">&nbsp;</label>
                                         <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Save</button>
                                         </div>
                                     </div>           
                                 </form>  
@@ -125,6 +131,27 @@
     <footer>
         <%- include('../patrials/footer'); %>
     </footer>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Files</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border spinner-border-lg text-danger" role="status"></div>                   
+                    </div>
+                    <div class="text-center mt-4">
+                        Depending on the size of your upload, this process may take some time.
+                        Please do not close your browser or close this modal.  
+                    </div>                
+                </div>
+            </div>
+        </div>
+    </div> 
+    
 <script>
     $('#btnreset').on('click', function () {
         $(this).parents('form').submit();

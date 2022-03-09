@@ -3,9 +3,9 @@ const basePath = process.cwd();
 const fs = require("fs");
 
 //const fileName = basePath+"./public/asset/json/test.json";
-const fileName = "./public/asset/json/collections.json";
+//const fileName = "./public/asset/json/collections.json";
 
-let metadatas = JSON.parse(fs.readFileSync(fileName));
+//let metadatas = JSON.parse(fs.readFileSync(fileName));
 const getMetadatas = ((req, res) => {
     res.json(metadatas)
 })

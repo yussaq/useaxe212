@@ -1,3 +1,15 @@
+/*################################################################################################*\
+#                                                                                                  #
+#     .01   10.        .0101010.        .0110110.        .0010010.  100         011  .0101010.     #
+#   1010     0101    0101010101000    0100101101100    1010010010100  010     110  0101001010100   #
+#  0100       0101  1010             0110       0010             0110  010   010  0110       0010  #
+# 010           000101011001101010000101000100101101001001001001010010  0011100  01101001010100010 #
+#  1000       0010             0110  0010             0010       0110  010   000  0110             #
+#   0010101010100    0110100010100    0110101010110    0110100101010  011     101  0110111010000   #
+#     '0101010'        '0100100'        '0100100'        '1001010'  010         010  '0110100'     #
+#                                                                                                  #
+\*################################################################################################*/
+
 const express = require('express');
 const router = express.Router();
 const basePath = process.cwd();
@@ -16,7 +28,7 @@ var readJson = (fileName, cb) => {
   }
     
 const getSetting = ((req, res, next) => {
-    var fileName = `${basePath}/public/asset/json/setting.json`;    
+    var fileName = `${basePath}/public/asset/json/_setting.json`;    
     var data = JSON.parse(fs.readFileSync(fileName, 'utf8'));
     if (data === undefined || data.length == 0) {
         const newdata = [{ 
@@ -32,13 +44,13 @@ const getSetting = ((req, res, next) => {
     }
     res.render(`${basePath}/views/pages/setting.ejs`, {
         title:'Setting',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 
+        description: 'Component settings to create nft collections', 
         setting :data[0]
     });
 });
 
 const updateSetting = ((req, res, next) => {
-    var fileName = `${basePath}/public/asset/json/setting.json`;    
+    var fileName = `${basePath}/public/asset/json/_setting.json`;    
     var newdata = { 
         id: req.body.id,
         name: req.body.name,

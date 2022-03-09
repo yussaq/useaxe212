@@ -1,3 +1,15 @@
+/*################################################################################################*\
+#                                                                                                  #
+#     .01   10.        .0101010.        .0110110.        .0010010.  100         011  .0101010.     #
+#   1010     0101    0101010101010    0100101101100    1010010010100  010     110  0101001010100   #
+#  0100       0101  1010             0110       0010             0110  010   010  0110       0010  #
+# 010           000101011001101010010101010100101101001001001001010010  0011100  01101001010101010 #
+#  1000       0010             0110  0010             0010       0110  010   000  0110             #
+#   0010101010100    0110110010100    0110101010110    0110100101010  011     101  0110111010010   #
+#     '0101010'        '0100100'        '0100100'        '1001010'  010         010  '0110100'     #
+#                                                                                                  #
+\*################################################################################################*/
+
 const express = require('express');
 const router = express.Router();
 const crypto = require("crypto");
@@ -6,7 +18,7 @@ const fs = require("fs");
 const multer = require("multer");
 const fileUpload= require('../middlewares/upload-middleware');
 
-const filePermutation = `${basePath}/public/asset/json/permutation.json`;      
+const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
 const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
 
 const storage = multer.diskStorage({
@@ -18,14 +30,54 @@ const storage = multer.diskStorage({
   }
 });
 
+const createPermutation = () => {
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;  
+    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
+    const layers = dataSetting[0].attributes;
+    layerArray = layers.split(',');
+    const layerfiles = [];
+    layerArray.forEach((attribute,index)  => {
+        try {
+            const arrayOfFiles = fs.readdirSync("./public/asset/attributes/"+attribute);
+            layerfiles[index] = arrayOfFiles;
+        } catch(e) {
+            console.log(e)
+        }
+    });
+
+    const layerPermutation = getPermutations(layerfiles);
+    var arraylayer = dataPermutation;
+    layerPermutation.forEach((permutation,index)  => {
+        attributesList = [];
+        rowper = [];
+        var vtime = Date.now();
+        rowAttribute = permutation.split(',');
+        var DNA = crypto.createHmac("sha256", permutation).digest("hex");
+        var objlayer = {};
+        objlayer['dna']= DNA;
+        objlayer['status'] = 'pendding'; //opt: (generate, upload, publish) 
+        objlayer['layers']= layers; //layerArray;
+        objlayer['attributes']= permutation; //rowAttribute;        
+        const permutationExists = dataPermutation.some(permutation => permutation.dna === DNA);
+        if(permutationExists) {
+            //console.log('exists ',DNA);
+        }else{
+            arraylayer.push(objlayer);
+        }
+    })
+    return arraylayer; 
+}  
+
 /* Show attribute page with information about attribute & collections */
 const getAttribute = ((req, res, next) => {
-    const fileAttributes = `${basePath}/public/asset/json/attributes.json`; 
-    const fileSetting = `${basePath}/public/asset/json/setting.json`;
-    const filePermutation = `${basePath}/public/asset/json/permutation.json`;      
-    const dataAttributes = JSON.parse(fs.readFileSync(fileAttributes));
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
     const dataSetting = JSON.parse(fs.readFileSync(fileSetting));
-    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));        
+    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
+    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+    const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;
+    const dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
+
+        
     const arrayAttribute = [];
     const tabs = dataSetting[0].attributes;
     tabArray = tabs.split(',');
@@ -34,13 +86,19 @@ const getAttribute = ((req, res, next) => {
         fs.readdirSync(`${basePath}/public/asset/attributes/${item}`).forEach(file => {
             arrayAttribute[item].push(file);
         });
-    });    
-
+    });
+    
+    const totalCollections = dataMetadata.length;
+    const totalUpload = dataMetadata.filter( ({status}) => status === "upload").length;
+    //result = newresult.filter(({ attributes,status }) => !attributes.includes(item) && status === 'pendding');                
     //console.log(JSON.stringify(tabArray, null, 2));
     res.render(`${basePath}/views/pages/attribute.ejs`, { 
         title:'Attributes',
-        description: 'Yours assets/attributes can create max <span class="badge rounded-pill bg-danger">'+Object.keys(dataPermutation).length+'</span> collections, target <span class="badge rounded-pill bg-primary">'+dataSetting[0].quantity+'</span> collections, you have <span class="badge rounded-pill bg-success">999</span> collection now.', 
-        collect :dataAttributes,
+        description:    'Yours assets/attributes can create max <span class="badge rounded-pill bg-danger">'+Object.keys(dataPermutation).length+
+                        '</span> collections, target <span class="badge rounded-pill bg-primary">'+
+                        dataSetting[0].quantity+'</span> collections, you have <span class="badge rounded-pill bg-success">'+totalCollections
+                        +'</span> collections, uploaded <span class="badge rounded-pill bg-info">'+totalUpload
+                        +'</span>', 
         tab:tabArray,
         dataAttribute: arrayAttribute,        
     });
@@ -52,7 +110,7 @@ const uploadAttribute = ((req, res, next) => {
             storage: fileUpload.files.storage(), 
             allowedFile:fileUpload.files.allowedFile 
         }).single('file');
-        res.redirect('/attributes');    
+//        res.redirect('/attributes');   
         upload(req, res, function (err) {
             if (err instanceof multer.MulterError) {
                 res.send(err);
@@ -60,12 +118,22 @@ const uploadAttribute = ((req, res, next) => {
                 res.send(err);
             }
         });
+/* 
+        var permutationJson = `${basePath}/public/asset/json/_permutation.json`;   
+        fs.writeFile(permutationJson, JSON.stringify(createPermutation(), null, 2), (err) => {
+            if (err)
+                console.log(err);
+            else {
+                res.redirect(301,'/attributes'); 
+            }
+        });
+ */                
     //res.status(200).send(req.file);
     res.redirect('/attributes');
 });
 
 const checkPermutation = (newPermutation) => {
-//    const filePermutation = `${basePath}/public/asset/json/permutation.json`;      
+//    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
 //    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
     const permutationExists = dataPermutation.some(permutation => permutation.dna === newPermutation.dna);
     if(permutationExists) {
@@ -76,7 +144,7 @@ const checkPermutation = (newPermutation) => {
 //    console.log(permutations);
 
     
-    var permutationJson = `${basePath}/public/asset/json/permutation.json`;   
+    var permutationJson = `${basePath}/public/asset/json/_permutation.json`;   
     fs.writeFile(permutationJson, JSON.stringify(arraylayer, null, 2), (err) => {
         if (err)
             console.log(err);
@@ -84,8 +152,6 @@ const checkPermutation = (newPermutation) => {
             res.redirect(301,'/attributes'); 
         }
     });
-
-
 }
 
 /* permtutation from attribute in layer recursive array */
@@ -110,9 +176,12 @@ const getPermutations = ((layerfiles) => {
   }
 })
 
+
+
 /* create data permutation json */
 const permutationAttribute = ((req, res, next) => {  
-    const fileSetting = `${basePath}/public/asset/json/setting.json`;  
+/*     
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;  
     const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
     const layers = dataSetting[0].attributes;
     layerArray = layers.split(',');
@@ -146,9 +215,11 @@ const permutationAttribute = ((req, res, next) => {
             arraylayer.push(objlayer);
         }
     })
-     
-        var permutationJson = `${basePath}/public/asset/json/permutation.json`;   
-        fs.writeFile(permutationJson, JSON.stringify(arraylayer, null, 2), (err) => {
+ */     
+
+    
+        var permutationJson = `${basePath}/public/asset/json/_permutation.json`;   
+        fs.writeFile(permutationJson, JSON.stringify(createPermutation(), null, 2), (err) => {
             if (err)
                 console.log(err);
             else {
@@ -158,7 +229,7 @@ const permutationAttribute = ((req, res, next) => {
 });
 
 const deleteAttribute = ((req, res, next) => {  
-    const filePermutation = `${basePath}/public/asset/json/permutation.json`;      
+    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
     var newresult = JSON.parse(fs.readFileSync(filePermutation));
     req.body.checkatribute.forEach((item,index)  => {        
         var pathfile = `${basePath}/public/asset/attributes/${req.body.layer}/${item}`;
@@ -168,11 +239,13 @@ const deleteAttribute = ((req, res, next) => {
                 if (err) throw err;
             }); 
         }
-        result = newresult.filter(({ attributes,status }) => !attributes.includes(item) && status === 'pendding');                newresult = JSON.stringify(result,null,2);
+        result = newresult.filter(({ attributes,status }) => !attributes.includes(item) && status === 'pendding');                
+        newresult = result;
+        //newresult = JSON.stringify(result,null,2);
     });  
 
-    var newdata = `${basePath}/public/asset/json/permutation.json`;    
-    fs.writeFile(newdata, newresult, (err) => {
+    var newdata = `${basePath}/public/asset/json/_permutation.json`;    
+    fs.writeFile(newdata, JSON.stringify(newresult,null,2), (err) => {
         if (err)
         console.log(err);
     });    
