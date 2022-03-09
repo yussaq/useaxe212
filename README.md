@@ -2,6 +2,8 @@
 Graphical User Interface NFT collections tool, 
 generate unique images from attribute, creates the metadata and uploaded to IPFS (Pinata)
 without seeing the beautiful code inside ;). Happy creativity :)
+
+![](useaxe212.mp4)
 # Requirements:
 nodejs : https://nodejs.org/en/
 
