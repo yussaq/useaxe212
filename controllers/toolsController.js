@@ -33,7 +33,7 @@ const getTools = ((req, res) => {
     res.render(`${basePath}/views/pages/tools.ejs`, { 
         title:'Tools',
         description: 'Generate/create NFT collection and metadata, ready upload to IPFS (pinata)', 
-        infocollection: 'Yours assets/attributes can create max <span class="badge rounded-pill bg-danger">'+Object.keys(dataPermutation).length+'</span> collections, target <span class="badge rounded-pill bg-primary">'+dataSetting[0].quantity+'</span> collections, you have <span class="badge rounded-pill bg-success">999</span> collection now.',
+        infocollection: 'Yours assets/attributes can create max <span class="badge rounded-pill bg-danger">'+dataPermutation.length+'</span> collections, target <span class="badge rounded-pill bg-primary">'+dataSetting[0].quantity+'</span> collections, you have <span class="badge rounded-pill bg-success">'+dataMetadata.length+'</span> collections.',
         collect :data 
     });
 })
@@ -50,7 +50,7 @@ const objMetadata = ((edition, type, rowdata) => {
     var DNA = crypto.createHmac("sha256", rowdata.attributes).digest("hex");
     var obj = {}
     var objlayer = {}
-    obj['name'] = dataSetting[0].name+' #'+edition
+    obj['name'] = '#'+edition
     obj['description'] = dataSetting[0].description
     obj['image'] = 'https://'
     obj['dna'] = DNA
@@ -148,7 +148,7 @@ function createCollectionSync(ffmpegpath, row, rodId ){
 
         dataMetadata.push(objMetadata(rodId, ext, row))
         /* create single file metadata  */
-        fs.appendFile(`${basePath}/public/asset/json/${rodId}.json`,   JSON.stringify(imageMetadata, null, 2) , function (err) {
+        fs.appendFile(`${basePath}/public/asset/json/metadata/${rodId}.json`,   JSON.stringify(imageMetadata, null, 2) , function (err) {
             if (err) throw err;
         });        
     })
@@ -200,12 +200,13 @@ const postGenerate = (async (req, res, next) => {
     res.redirect(301,'/');
 })
 
-const postReset = ((req, res, next) => {
+const postReset = (async(req, res, next) => {
     var metadataJson    = `${basePath}/public/asset/json/_metadata.json`;
     var settingJson      = `${basePath}/public/asset/json/_setting.json`;    
     var permutationJson  = `${basePath}/public/asset/json/_permutation.json`;
     const dirattributes  = `${basePath}/public/asset/attributes/`
-    const dircollections = `${basePath}/public/asset/collections/`    
+    const dircollections = `${basePath}/public/asset/collections/`
+    const dirmetadata    = `${basePath}/public/asset/json/metadata/`    
 
     const newdata = { 
         id: 1,
@@ -237,48 +238,78 @@ const postReset = ((req, res, next) => {
     });  
 
     try {
+        if (fs.existsSync(dirattributes)) {
         fs.statSync(dirattributes);
-        console.log('file or directory exists');
-        fs.rmdir(dirattributes, { recursive: true }, (err) => {
+        //console.log('file or directory exists');
+        fs.rm(dirattributes, { recursive: true }, (err) => {
             if (err) {
                 throw err;
             }    
-            console.log(`${dirattributes} is deleted!`);
+            console.log(`dirattributes is deleted!`);
+            return true;
         });
+        }
     }
-       catch (err) {
+    catch (err) {
         if (err.code === 'ENOENT') {
-            console.log('file or directory does not exist');
+            console.log('file or dirattributes does not exist');
         }
     }
 
-       try {
-        fs.statSync(dircollections);
-        console.log('file or directory exists');
-        fs.rmdir(dircollections, { recursive: true }, (err) => {
+    try {
+        if (fs.existsSync(dircollections)) {
+            fs.statSync(dircollections);
+            //console.log('file or directory exists');
+            fs.rm(dircollections, { recursive: true }, (err) => {
+                if (err) {
+                    throw err;
+                }    
+                console.log(`dircollections is deleted!`);
+                return true;
+            });
+        }
+    }
+    catch (err) {
+        if (err.code === 'ENOENT') {
+        console.log('file or dircollections does not exist');
+        }
+    }
+
+    try {
+        if (fs.existsSync(dirmetadata)) {        
+        fs.statSync(dirmetadata);
+        //console.log('file or directory exists');
+        fs.rm(dirmetadata, { recursive: true }, (err) => {
             if (err) {
                 throw err;
             }    
-            console.log(`${dircollections} is deleted!`);
+            console.log(`dirmetadata is deleted!`);
+            return true;
         });
+        }
     }
-       catch (err) {
+    catch (err) {
         if (err.code === 'ENOENT') {
         console.log('file or directory does not exist');
         }
-       }       
+    }    
 
     if (!fs.existsSync(`${basePath}/public/asset/attributes`)) {
         fs.mkdirSync(`${basePath}/public/asset/attributes`, { recursive: true });
     }
     if (!fs.existsSync(`${basePath}/public/asset/collections`)) {
-        fs.mkdir(`${basePath}/public/asset/collections`);
+        fs.mkdirSync(`${basePath}/public/asset/collections`);
     }
+
+    if (!fs.existsSync(`${basePath}/public/asset/json/metadata`)) {
+        fs.mkdirSync(`${basePath}/public/asset/json/metadata`);
+    }    
 
     if (!fs.existsSync(`${basePath}/public/asset/attributes/background`)) {
         fs.mkdirSync(`${basePath}/public/asset/attributes/background`, { recursive: true });
     }
-    res.redirect(301,'/setting');
+    res.redirect('/setting');
+    //res.redirect(301,'/setting');
 })
 
 const show_a_message = () => {
@@ -288,7 +319,7 @@ const show_a_message = () => {
 const updateSingleMetadata = (IpfsHash, editionIdx) => {
     const urlipfs = `https://gateway.pinata.cloud/ipfs`
     editionIdx.forEach(async(val, idx) => {
-        var singleJson = `${basePath}/public/asset/json/${val}.json`;
+        var singleJson = `${basePath}/public/asset/json/metadata/${val}.json`;
         var singleMetadata = JSON.parse(fs.readFileSync(singleJson));   
         singleMetadata.image = `${urlipfs}/${IpfsHash}/${singleMetadata.edition}.${singleMetadata.type}`
         fs.writeFileSync(singleJson, JSON.stringify(singleMetadata, null, 2), (err) => { 
@@ -301,11 +332,11 @@ const updateSingleMetadata = (IpfsHash, editionIdx) => {
 
 const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {    
     const urljson = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    const srcjson = `${basePath}/public/asset/json`;
+    const srcjson = `${basePath}/public/asset/json/metadata`;
     let dataJson = new FormData();
         
     editionIdx.forEach(async(val, idx) => {
-        filename = `${basePath}/public/asset/json/${val}.json`
+        filename = `${basePath}/public/asset/json/metadata/${val}.json`
         dataJson.append('file', fs.createReadStream(filename), {
             filepath: basePathConverter(srcjson, filename)
         });

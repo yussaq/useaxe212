@@ -64,7 +64,7 @@ const updateSetting = ((req, res, next) => {
     var formdata = req.body;    
     var datasetting = [];
     datasetting.push(newdata);
-    fs.writeFile(fileName, JSON.stringify(datasetting), (err) => {
+    fs.writeFile(fileName, JSON.stringify(datasetting,null,2), (err) => {
         if (err)
         console.log(err);
     });            
