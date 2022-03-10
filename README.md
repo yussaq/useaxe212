@@ -9,7 +9,8 @@ nodejs : https://nodejs.org/en/
 
 ffmpeg : https://ffmpeg.org/download.html
 
-Istall ffmpeg with the following:
+Install ffmpeg with the following:
+
 Windows
 ```sh
 - Download https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
