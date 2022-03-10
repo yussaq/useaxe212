@@ -22,16 +22,18 @@
                         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body"><p>
                                 <%- infocollection %><br>
-                                ffmpeg path default win: C:\ffmpeg\bin\ffmpeg.exe, linux: /usr/bin/ffmpeg<br>
+<!--                                 ffmpeg path default win: C:\ffmpeg\bin\ffmpeg.exe, linux: /usr/bin/ffmpeg<br> -->
                             </p>
                                 <form action="/tools/generate" method="post"> 
                                     <input type="hidden" name="id"  value="">
+<!-- 
                                     <div class="row mb-3">
                                         <label for="collection_name" class="col-sm-2 col-form-label">ffmpeg path</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="ffmpeg_path" id="ffmpeg_path" value="/usr/bin/ffmpeg">
                                         </div>
                                     </div>
+ -->
                                     <div class="row mb-3">
                                         <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
                                         <div class="col-sm-2">
@@ -137,14 +139,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Upload Files</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Process Files</h5>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-center">
                         <div class="spinner-border spinner-border-lg text-danger" role="status"></div>                   
                     </div>
                     <div class="text-center mt-4">
-                        Depending on the size of your upload, this process may take some time.
+                        Depending on the size of your files, this process may take some time.
                         Please do not close your browser or close this modal.  
                     </div>                
                 </div>

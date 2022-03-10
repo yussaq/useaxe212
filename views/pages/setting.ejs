@@ -47,7 +47,14 @@
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="creator" id="collection_creator" value="<%= setting.creator %>">
                 </div>
-            </div>           
+            </div>
+            <div class="row mb-3">
+                <label for="collection_ffmpeg" class="col-sm-2 col-form-label">ffmpeg</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="ffmpeg" id="collection_ffmpeg" value="<%= setting.ffmpeg %>">
+                    For windows : <button type="button" class="btn btn-warning" onclick="pathSelect((this.textContent || this.innerText))">c:\\ffmpeg\\bin\\ffmpeg.exe</button>  ||  linux:   <button type="button" class="btn btn-warning" onclick="pathSelect((this.textContent || this.innerText))">/usr/bin/ffmpeg</button>
+                </div>
+            </div>                       
             <div class="row mb-3">
                 <label for="collection_creator" class="col-sm-2 col-form-label">&nbsp;</label>
                 <div class="col-sm-10">
@@ -61,4 +68,11 @@
         <%- include('../patrials/footer'); %>
     </footer>
 </body>
+<script>
+function pathSelect(path){
+	var txt = "Nick";
+	document.getElementById("collection_ffmpeg").value = path;
+}
+</script>
+
 </html>

@@ -23,10 +23,10 @@ const basePathConverter = require('base-path-converter');
     
 const data = [];
 const fileSetting = `${basePath}/public/asset/json/_setting.json`;
-const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
-const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
 var dataSetting = JSON.parse(fs.readFileSync(fileSetting));
+const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
 var dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
 var dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
 
 const getTools = ((req, res) => {
@@ -116,10 +116,13 @@ const getComplexFilter = (row) => {
     return  complexFilterObj
 }
 
-function createCollectionSync(ffmpegpath, row, rodId ){
+function createCollectionSync(row, rodId ){
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    var dataSetting = JSON.parse(fs.readFileSync(fileSetting));
+
     return new Promise((resolve,reject)=>{
         const command = ffmpeg();
-        ffmpeg.setFfmpegPath(ffmpegpath);
+        ffmpeg.setFfmpegPath(dataSetting[0].ffmpeg);
         var gif = false;
         var ext = 'gif';
         const attribute = getFileName(row)
@@ -174,7 +177,7 @@ const postGenerate = (async (req, res, next) => {
     findidx = []
     randomItem = randomize(filterItem)                                                                   
     for (var i = 0; i <= req.body.quantity-1; i++) {
-        await createCollectionSync(req.body.ffmpeg_path, randomItem[i], i+lastEdition+1 )    
+        await createCollectionSync(randomItem[i], i+lastEdition+1 )    
         console.log('save image '+i)
         var index = dataPermutation.findIndex(obj => obj.dna===randomItem[i].dna);   
         findidx.push(index)     
@@ -215,7 +218,8 @@ const postReset = (async(req, res, next) => {
         quantity : 100,
         ipfs : 'https://',
         creator: 'Yussaq NF',
-        attributes : 'background'
+        attributes : 'background',
+        ffmpeg : "/usr/bin/ffmpeg"  // "c:\\ffmpeg\\bin\\ffmpeg.exe" //linux-> /usr/bin/ffmpeg
     };
 
     var datasetting = [];
@@ -241,7 +245,7 @@ const postReset = (async(req, res, next) => {
         if (fs.existsSync(dirattributes)) {
         fs.statSync(dirattributes);
         //console.log('file or directory exists');
-        fs.rm(dirattributes, { recursive: true }, (err) => {
+        fs.rmdirSync(dirattributes,{ recursive: true }, (err) => {
             if (err) {
                 throw err;
             }    
@@ -260,7 +264,7 @@ const postReset = (async(req, res, next) => {
         if (fs.existsSync(dircollections)) {
             fs.statSync(dircollections);
             //console.log('file or directory exists');
-            fs.rm(dircollections, { recursive: true }, (err) => {
+            fs.rmdirSync(dircollections, { recursive: true },(err) => {
                 if (err) {
                     throw err;
                 }    
@@ -279,7 +283,7 @@ const postReset = (async(req, res, next) => {
         if (fs.existsSync(dirmetadata)) {        
         fs.statSync(dirmetadata);
         //console.log('file or directory exists');
-        fs.rm(dirmetadata, { recursive: true }, (err) => {
+        fs.rmdirSync(dirmetadata,{ recursive: true }, (err) => {
             if (err) {
                 throw err;
             }    
@@ -295,19 +299,25 @@ const postReset = (async(req, res, next) => {
     }    
 
     if (!fs.existsSync(`${basePath}/public/asset/attributes`)) {
-        fs.mkdirSync(`${basePath}/public/asset/attributes`, { recursive: true });
+        fs.mkdirSync(`${basePath}/public/asset/attributes/`);
+        console.log(`dirattributes created`);
     }
+    if (!fs.existsSync(`${basePath}/public/asset/attributes/background`)) {
+        fs.mkdirSync(`${basePath}/public/asset/attributes/background/`);        
+        console.log(`dirbackground created`);
+    }       
+
     if (!fs.existsSync(`${basePath}/public/asset/collections`)) {
-        fs.mkdirSync(`${basePath}/public/asset/collections`);
+        fs.mkdirSync(`${basePath}/public/asset/collections/`);
+        console.log(`dircollections created`);
     }
 
     if (!fs.existsSync(`${basePath}/public/asset/json/metadata`)) {
-        fs.mkdirSync(`${basePath}/public/asset/json/metadata`);
+        fs.mkdirSync(`${basePath}/public/asset/json/metadata/`);
+        console.log(`dirmetadata created`);
     }    
 
-    if (!fs.existsSync(`${basePath}/public/asset/attributes/background`)) {
-        fs.mkdirSync(`${basePath}/public/asset/attributes/background`, { recursive: true });
-    }
+
     res.redirect('/setting');
     //res.redirect(301,'/setting');
 })

@@ -38,7 +38,8 @@ const getSetting = ((req, res, next) => {
             quantity : 10,
             ipfs : 'https://',
             creator: 'Yussaq NF',
-            attributes : 'background'
+            attributes : 'background',
+            ffmpeg : '/usr/bin/ffmpeg' // "c:\\ffmpeg\\bin\\ffmpeg.exe" //linux-> /usr/bin/ffmpeg
         }];
         data=newdata; 
     }
@@ -58,7 +59,8 @@ const updateSetting = ((req, res, next) => {
         quantity : req.body.quantity,
         ipfs :req.body.ipfs,
         creator: req.body.creator,
-        attributes : req.body.attributes
+        attributes : req.body.attributes,
+        ffmpeg : req.body.ffmpeg
     };
   
     var formdata = req.body;    
