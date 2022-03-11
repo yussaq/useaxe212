@@ -1,7 +1,7 @@
 /*################################################################################################*\
 #                                                                                                  #
 #     .01   10.        .0101010.        .0110110.        .0010010.  100         011  .0101010.     #
-#   1010     0101    0101010101000    0100101101100    1010010010100  010     110  0101001010100   #
+#   10100   10101    0101010101000    0100101101100    1010010010100  010     110  0101001010100   #
 #  0100       0101  1010             0110       0010             0110  010   010  0110       0010  #
 # 010           000101011001101011000101000100101101001001001001010010  0011100  01101001010100010 #
 #  1000       0010             0110  0010             0010       0110  010   000  0110             #
@@ -230,9 +230,9 @@ const postReset = (async(req, res, next) => {
 
     const newdata = { 
         id: 1,
-        name: 'my collection',
-        initial: 'mc',
-        description : 'my collection',
+        name: 'Hello World',
+        initial: 'HW',
+        description : 'Hello World NFT collection',
         quantity : 10,
         ipfs : 'https://',
         creator: 'Yussaq NF',
@@ -355,7 +355,7 @@ const updateSingleMetadata = (IpfsHash, editionIdx) => {
             console.log('Update : '+ `${val}.json`); 
         })
     })    
-    console.log('Update All Metadata Done');
+    console.log('Proccess Upload Metadata !');
 }
 
 const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {    
@@ -386,7 +386,11 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
                 'Content-Type': `multipart/form-data; boundary=${dataJson._boundary}`,
                 pinata_api_key: ApiKey,
                 pinata_secret_api_key: SecretApiKey
-            }
+            },
+            onUploadProgress: progressEvent => {
+              var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              console.log('Upload Metadata : '+ percentCompleted + '%');
+            }            
         })
         .then(function (response) {
             console.log('upload metadata done');                                 
