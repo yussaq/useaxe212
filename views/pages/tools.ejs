@@ -22,7 +22,6 @@
                         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body"><p>
                                 <%- infocollection %><br>
-<!--                                 ffmpeg path default win: C:\ffmpeg\bin\ffmpeg.exe, linux: /usr/bin/ffmpeg<br> -->
                             </p>
                                 <form action="/tools/generate" method="post"> 
                                     <input type="hidden" name="id"  value="">
@@ -111,7 +110,8 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                Are yoou sure to reset !
+                                                    Are you sure you want to reset this collections?                                                  
+                                                    <div>  It cannot be undone.</div>
                                                 </div>
                                                 <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>

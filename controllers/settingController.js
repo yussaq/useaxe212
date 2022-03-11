@@ -34,7 +34,8 @@ const getSetting = ((req, res, next) => {
         const newdata = [{ 
             id: 1,
             name: 'my collection',
-            description : 'my best collection',
+            initial: 'mc',
+            description : 'my collection',
             quantity : 10,
             ipfs : 'https://',
             creator: 'Yussaq NF',
@@ -55,6 +56,7 @@ const updateSetting = ((req, res, next) => {
     var newdata = { 
         id: req.body.id,
         name: req.body.name,
+        initial: req.body.initial,
         description : req.body.description,
         quantity : req.body.quantity,
         ipfs :req.body.ipfs,

@@ -22,14 +22,24 @@ const ffmpeg = require('fluent-ffmpeg');
 const basePathConverter = require('base-path-converter');
     
 const data = [];
+/* 
 const fileSetting = `${basePath}/public/asset/json/_setting.json`;
 var dataSetting = JSON.parse(fs.readFileSync(fileSetting));
 const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
 var dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+*/
+const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
 const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
 var dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
 
 const getTools = ((req, res) => {
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    var dataSetting = JSON.parse(fs.readFileSync(fileSetting));
+    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
+    var dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+    //const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
+    //var dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
     res.render(`${basePath}/views/pages/tools.ejs`, { 
         title:'Tools',
         description: 'Generate/create NFT collection and metadata, ready upload to IPFS (pinata)', 
@@ -39,6 +49,8 @@ const getTools = ((req, res) => {
 })
 
 const objMetadata = ((edition, type, rowdata) => {
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    var dataSetting = JSON.parse(fs.readFileSync(fileSetting)); 
     attributesList = [];
     rowAttribute = getFileName(rowdata);
     rowAttribute.forEach((val,index)  => {  
@@ -64,6 +76,8 @@ const objMetadata = ((edition, type, rowdata) => {
 })
 
 const createMetadata = ((rowdata) => {
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    var dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
     attributesList = [];
     rowAttribute = rowdata['attributes'];
     rowAttribute.forEach((val,index)  => {  
@@ -119,7 +133,8 @@ const getComplexFilter = (row) => {
 function createCollectionSync(row, rodId ){
     const fileSetting = `${basePath}/public/asset/json/_setting.json`;
     var dataSetting = JSON.parse(fs.readFileSync(fileSetting));
-
+    //const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
+    //var dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
     return new Promise((resolve,reject)=>{
         const command = ffmpeg();
         ffmpeg.setFfmpegPath(dataSetting[0].ffmpeg);
@@ -172,6 +187,8 @@ const postGenerate = (async (req, res, next) => {
     const filePermutation = `${basePath}/public/asset/json/_permutation.json`;    
     const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));    
     const filterItem = dataPermutation.filter(({ status }) => status === 'pendding')
+    //const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
+    //let dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
     lastEdition = dataMetadata.length
     rowMetadata = []
     findidx = []
@@ -214,8 +231,9 @@ const postReset = (async(req, res, next) => {
     const newdata = { 
         id: 1,
         name: 'my collection',
-        description : 'my best collection',
-        quantity : 100,
+        initial: 'mc',
+        description : 'my collection',
+        quantity : 10,
         ipfs : 'https://',
         creator: 'Yussaq NF',
         attributes : 'background',
@@ -353,7 +371,7 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
     })
     const partJson = maxPart+1
     const metadataJson = JSON.stringify({
-        name: 'part_'+partJson+'_json',
+        name: dataSetting[0].initial+'_part_'+partJson+'_json',
         keyvalues: {
             uploadedby: 'useaxe212',
             total : editionIdx.length
@@ -381,6 +399,8 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
 })
 
 const pinFileToIPFS = (async (req, res, next) => {    
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
     const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;    
     const dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));    
     const filterItem = dataMetadata.filter(({ status }) => status !== 'upload')
@@ -403,7 +423,7 @@ const pinFileToIPFS = (async (req, res, next) => {
     }
     var partImage = maxPart+1
     const metadata = JSON.stringify({
-        name: 'part_'+partImage,
+        name: dataSetting[0].initial+'_part_'+partImage,
         keyvalues: {
             uploadedby: 'useaxe212',
             total : req.body.quantity

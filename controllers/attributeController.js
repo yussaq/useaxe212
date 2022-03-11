@@ -18,8 +18,8 @@ const fs = require("fs");
 const multer = require("multer");
 const fileUpload= require('../middlewares/upload-middleware');
 
-const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
-const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+//const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
+//const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -30,7 +30,44 @@ const storage = multer.diskStorage({
   }
 });
 
+/* Show attribute page with information about attribute & collections */
+const getAttribute = ((req, res, next) => {
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));
+    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
+    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+    const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;
+    const dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));        
+    const arrayAttribute = [];
+    const tabs = dataSetting[0].attributes;
+    tabArray = tabs.split(',');
+    tabArray.forEach((item,index)  => {   
+        arrayAttribute[item] = [];     
+        fs.readdirSync(`${basePath}/public/asset/attributes/${item}`).forEach(file => {
+            arrayAttribute[item].push(file);
+        });
+    });
+    
+    const totalCollections = dataMetadata.length;
+    const totalUpload = dataMetadata.filter( ({status}) => status === "upload").length;
+    //result = newresult.filter(({ attributes,status }) => !attributes.includes(item) && status === 'pendding');                
+    //console.log(JSON.stringify(tabArray, null, 2));
+    totalmax = dataPermutation.length
+    res.render(`${basePath}/views/pages/attribute.ejs`, { 
+        title:'Attributes',
+        description:    'Yours assets/attributes can create max <span class="badge rounded-pill bg-danger">'+totalmax+
+                        '</span> collections, target <span class="badge rounded-pill bg-primary">'+
+                        dataSetting[0].quantity+'</span> collections, you have <span class="badge rounded-pill bg-success">'+totalCollections
+                        +'</span> collections, uploaded <span class="badge rounded-pill bg-info">'+totalUpload
+                        +'</span>', 
+        tab:tabArray,
+        dataAttribute: arrayAttribute,        
+    });
+})
+
 const createPermutation = () => {
+    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
+    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));    
     const fileSetting = `${basePath}/public/asset/json/_setting.json`;  
     const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
     const layers = dataSetting[0].attributes;
@@ -68,49 +105,12 @@ const createPermutation = () => {
     return arraylayer; 
 }  
 
-/* Show attribute page with information about attribute & collections */
-const getAttribute = ((req, res, next) => {
-    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
-    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));
-    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;
-    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
-    const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;
-    const dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
-
-        
-    const arrayAttribute = [];
-    const tabs = dataSetting[0].attributes;
-    tabArray = tabs.split(',');
-    tabArray.forEach((item,index)  => {   
-        arrayAttribute[item] = [];     
-        fs.readdirSync(`${basePath}/public/asset/attributes/${item}`).forEach(file => {
-            arrayAttribute[item].push(file);
-        });
-    });
-    
-    const totalCollections = dataMetadata.length;
-    const totalUpload = dataMetadata.filter( ({status}) => status === "upload").length;
-    //result = newresult.filter(({ attributes,status }) => !attributes.includes(item) && status === 'pendding');                
-    //console.log(JSON.stringify(tabArray, null, 2));
-    res.render(`${basePath}/views/pages/attribute.ejs`, { 
-        title:'Attributes',
-        description:    'Yours assets/attributes can create max <span class="badge rounded-pill bg-danger">'+Object.keys(dataPermutation).length+
-                        '</span> collections, target <span class="badge rounded-pill bg-primary">'+
-                        dataSetting[0].quantity+'</span> collections, you have <span class="badge rounded-pill bg-success">'+totalCollections
-                        +'</span> collections, uploaded <span class="badge rounded-pill bg-info">'+totalUpload
-                        +'</span>', 
-        tab:tabArray,
-        dataAttribute: arrayAttribute,        
-    });
-})
-
 /* upload multiple file  */
 const uploadAttribute = ((req, res, next) => {  
     var upload = multer({
             storage: fileUpload.files.storage(), 
             allowedFile:fileUpload.files.allowedFile 
         }).single('file');
-//        res.redirect('/attributes');   
         upload(req, res, function (err) {
             if (err instanceof multer.MulterError) {
                 res.send(err);
@@ -118,31 +118,19 @@ const uploadAttribute = ((req, res, next) => {
                 res.send(err);
             }
         });
-/* 
-        var permutationJson = `${basePath}/public/asset/json/_permutation.json`;   
-        fs.writeFile(permutationJson, JSON.stringify(createPermutation(), null, 2), (err) => {
-            if (err)
-                console.log(err);
-            else {
-                res.redirect(301,'/attributes'); 
-            }
-        });
- */                
     //res.status(200).send(req.file);
     res.redirect('/attributes');
 });
 
 const checkPermutation = (newPermutation) => {
-//    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
-//    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
+    const filePermutation = `${basePath}/public/asset/json/_permutation.json`;      
+    const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));
     const permutationExists = dataPermutation.some(permutation => permutation.dna === newPermutation.dna);
     if(permutationExists) {
         console.log('exists');
     }else(
         dataPermutation.push(newPermutation)
     )
-//    console.log(permutations);
-
     
     var permutationJson = `${basePath}/public/asset/json/_permutation.json`;   
     fs.writeFile(permutationJson, JSON.stringify(arraylayer, null, 2), (err) => {
@@ -176,48 +164,8 @@ const getPermutations = ((layerfiles) => {
   }
 })
 
-
-
 /* create data permutation json */
 const permutationAttribute = ((req, res, next) => {  
-/*     
-    const fileSetting = `${basePath}/public/asset/json/_setting.json`;  
-    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
-    const layers = dataSetting[0].attributes;
-    layerArray = layers.split(',');
-    const layerfiles = [];
-    layerArray.forEach((attribute,index)  => {
-        try {
-            const arrayOfFiles = fs.readdirSync("./public/asset/attributes/"+attribute);
-            layerfiles[index] = arrayOfFiles;
-        } catch(e) {
-            console.log(e)
-        }
-    });
-
-    const layerPermutation = getPermutations(layerfiles);
-    var arraylayer = dataPermutation;
-    layerPermutation.forEach((permutation,index)  => {
-        attributesList = [];
-        rowper = [];
-        var vtime = Date.now();
-        rowAttribute = permutation.split(',');
-        var DNA = crypto.createHmac("sha256", permutation).digest("hex");
-        var objlayer = {};
-        objlayer['dna']= DNA;
-        objlayer['status'] = 'pendding'; //opt: (generate, upload, publish) 
-        objlayer['layers']= layers; //layerArray;
-        objlayer['attributes']= permutation; //rowAttribute;        
-        const permutationExists = dataPermutation.some(permutation => permutation.dna === DNA);
-        if(permutationExists) {
-            console.log('exists ',DNA);
-        }else{
-            arraylayer.push(objlayer);
-        }
-    })
- */     
-
-    
         var permutationJson = `${basePath}/public/asset/json/_permutation.json`;   
         fs.writeFile(permutationJson, JSON.stringify(createPermutation(), null, 2), (err) => {
             if (err)
@@ -233,7 +181,7 @@ const deleteAttribute = ((req, res, next) => {
     var newresult = JSON.parse(fs.readFileSync(filePermutation));
     req.body.checkatribute.forEach((item,index)  => {        
         var pathfile = `${basePath}/public/asset/attributes/${req.body.layer}/${item}`;
-        console.log(pathfile);
+        //console.log(pathfile);
         if (fs.existsSync(pathfile)) {
             fs.unlink(pathfile, function (err) {
                 if (err) throw err;
@@ -249,8 +197,7 @@ const deleteAttribute = ((req, res, next) => {
         if (err)
         console.log(err);
     });    
-
-    console.log(newresult);
+    //console.log(newresult);
     res.redirect('/attributes');
 });
 
