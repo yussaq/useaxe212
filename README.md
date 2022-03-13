@@ -7,6 +7,13 @@ without seeing the beautiful code inside ;). Happy creativity :)
 # Requirements:
 nodejs : https://nodejs.org/en/
 
+
+```sh
+$ sudo apt update
+$ sudo apt install nodejs
+$ node -v
+```
+
 ffmpeg : https://ffmpeg.org/download.html
 
 Install ffmpeg with the following:
@@ -44,7 +51,7 @@ run application
 ```sh
 npm run start
 ```
-open browser and goto address:
+open browser and goto http://localhost:2022/
 ```sh
-localhost:2022
+http://localhost:2022/
 ```
