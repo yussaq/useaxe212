@@ -19,11 +19,9 @@ $ sudo apt install nodejs
 $ node -v
 ```
 
-ffmpeg : https://ffmpeg.org/download.html
+Install ffmpeg : https://ffmpeg.org/download.html
 
-Install ffmpeg with the following:
-
-Windows
+#### Windows
 ```sh
 - Download https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
 - Extract the file
@@ -35,7 +33,7 @@ Windows
 - open cmd and run the following command: ffmpeg -version
 ```
 
-Linux
+#### Linux
 ```sh
 $ sudo apt update
 $ sudo apt install ffmpeg
