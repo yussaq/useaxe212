@@ -1,10 +1,10 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "name": "Hello World",
     "initial": "HW",
     "description": "Hello World NFT collection",
-    "quantity": "10",
+    "quantity": 10,
     "ipfs": "https://",
     "creator": "Yussaq NF",
     "attributes": "background",
