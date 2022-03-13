@@ -3,17 +3,7 @@ Graphical User Interface NFT collections tool,
 generate unique images from attribute, creates the metadata and uploaded to IPFS (Pinata)
 without seeing the beautiful code inside ;). Happy creativity :)
 
-[website]: https://yussaq-nf.com
-[twitter]: https://twitter.com/yussaqnf
-[linkedin]: https://id.linkedin.com/in/yussaq-nurfitrianto-0923936b/
-[youtube]: https://www.youtube.com/channel/UCFLwu6tx3wDUtPxswHdV_QQ
-
-
-[![Youtube](https://img.shields.io/badge/YouTube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCFLwu6tx3wDUtPxswHdV_QQ)
-
 [![Twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/yussaqnf)
-
-[![Linkedin](https://img.shields.io/badge/YouTube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCFLwu6tx3wDUtPxswHdV_QQ)
 
 ![](useaxe212.gif)
 
@@ -66,4 +56,4 @@ run application
 ```sh
 npm run start
 ```
-open browser and goto [http://localhost:2022](http://localhost:2022/){:target="\_blank"} 
+open browser and goto [http://localhost:2022](http://localhost:2022/) 
