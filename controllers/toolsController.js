@@ -12,6 +12,7 @@
 
 const express = require('express');
 const axios = require("axios");
+const https = require('https')
 const path = require("path");
 const crypto = require("crypto");
 const router = express.Router();
@@ -188,7 +189,7 @@ const postGenerate = (async (req, res, next) => {
     const dataPermutation = JSON.parse(fs.readFileSync(filePermutation));    
     const filterItem = dataPermutation.filter(({ status }) => status === 'pendding')
     //const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
-    //let dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
+    //var dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
     lastEdition = dataMetadata.length
     rowMetadata = []
     findidx = []
@@ -345,18 +346,25 @@ const show_a_message = () => {
 };
 
 const updateSingleMetadata = (IpfsHash, editionIdx) => {
-    const urlipfs = `https://gateway.pinata.cloud/ipfs`
+    //const urlipfs = `ipfs://gateway.pinata.cloud/ipfs/${IpfsHash}`
     editionIdx.forEach(async(val, idx) => {
         var singleJson = `${basePath}/public/asset/json/metadata/${val}.json`;
         var singleMetadata = JSON.parse(fs.readFileSync(singleJson));   
-        singleMetadata.image = `${urlipfs}/${IpfsHash}/${singleMetadata.edition}.${singleMetadata.type}`
+        singleMetadata.image = `ipfs://${IpfsHash}/${singleMetadata.edition}.${singleMetadata.type}`
         fs.writeFileSync(singleJson, JSON.stringify(singleMetadata, null, 2), (err) => { 
             if (err) throw err; 
             console.log('Update : '+ `${val}.json`); 
         })
     })    
-    console.log('Proccess Upload Metadata !');
+    console.log(`Proccess upload ${editionIdx.length} metadata ....`);
 }
+
+const instanceAxios = axios.create({
+    maxBodyLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
+    timeout: 160000,
+    httpsAgent: new https.Agent({ keepAlive: true }),    
+});
+    
 
 const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {    
     const urljson = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
@@ -371,33 +379,38 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
     })
     const partJson = maxPart+1
     const metadataJson = JSON.stringify({
-        name: dataSetting[0].initial+'_part_'+partJson+'_json',
+        name: dataSetting[0].initial+'_part_'+partJson+'_metadata',
         keyvalues: {
             uploadedby: 'useaxe212',
             total : editionIdx.length
         },
     });    
     dataJson.append('pinataMetadata', metadataJson);
+    const config = {
+        headers: {
+            'Content-Type': `multipart/form-data; boundary=${dataJson._boundary}`,
+            pinata_api_key: ApiKey,
+            pinata_secret_api_key: SecretApiKey        
+        },
+        onUploadProgress: progressEvent => {
+            var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            console.log('Upload Image : '+ percentCompleted + '%');
+        }
 
-    return axios
-        .post(urljson, dataJson, {
-            maxBodyLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
-            headers: {
-                'Content-Type': `multipart/form-data; boundary=${dataJson._boundary}`,
-                pinata_api_key: ApiKey,
-                pinata_secret_api_key: SecretApiKey
-            },
-            onUploadProgress: progressEvent => {
-              var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              console.log('Upload Metadata : '+ percentCompleted + '%');
-            }            
-        })
+    }        
+    instanceAxios
+        .post(urljson, dataJson, config)
         .then(function (response) {
-            console.log('upload metadata done');                                 
+            console.log('Upload metadata done');                                 
             //res.redirect(301, '/tools');    
         })
         .catch(function (error) {
-            console.log(error);
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            }
+            //console.log(error);
             console.log('ERROR : pinMetadataToIPFS')
         });      
 })
@@ -415,7 +428,7 @@ const pinFileToIPFS = (async (req, res, next) => {
     findidx = []
     editionIdx = []
     for (var i = 0; i < req.body.quantity; i++) {
-        console.log('proccess img '+i)
+        //console.log('proccess img '+i)
         var index = dataMetadata.findIndex(obj => obj.dna===filterItem[i].dna);   
         dataMetadata[index].status = 'upload'
         dataMetadata[index].part = maxPart+1;                
@@ -425,9 +438,10 @@ const pinFileToIPFS = (async (req, res, next) => {
         });
         editionIdx.push(filterItem[i].edition)     
     }
+    console.log(`Proccess upload ${editionIdx.length} images ....`)
     var partImage = maxPart+1
     const metadata = JSON.stringify({
-        name: dataSetting[0].initial+'_part_'+partImage,
+        name: dataSetting[0].initial+'_part_'+partImage+'_images',
         keyvalues: {
             uploadedby: 'useaxe212',
             total : req.body.quantity
@@ -435,7 +449,6 @@ const pinFileToIPFS = (async (req, res, next) => {
     });
     data.append('pinataMetadata', metadata);    
     const config = {
-        maxBodyLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
         headers: {
             'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
             pinata_api_key: req.body.pinataApiKey,
@@ -447,11 +460,11 @@ const pinFileToIPFS = (async (req, res, next) => {
         }
     }
 
-    return axios
+    instanceAxios
         .post(url, data, config)
         .then( response => {
             //console.log(response.data.IpfsHash);
-            console.log('upload image done');  
+            console.log('Upload image done');  
             fs.writeFileSync(fileMetadata, JSON.stringify(dataMetadata, null, 2), (err) => { 
                 if (err) throw err; 
                 //console.log('The file has been saved!'); 
@@ -463,11 +476,32 @@ const pinFileToIPFS = (async (req, res, next) => {
                 console.log(err)
                 console.log('ERROR : pinFileToIPFS')
             }
+
             try{
                 pinMetadataToIPFS(maxPart, editionIdx,req.body.pinataApiKey,req.body.pinataSecretApiKey)
                 //console.log('pinMetadataToIPFS')
-            }catch(err){
-                console.log(err)
+            }catch(error){
+                if (error.response) {
+                    // The request was made
+                    // the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log("error response :");
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                  } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest 
+                    // is an instance of http.ClientRequest in node.js
+                    console.log("error request :");
+                    console.log(error.request);
+                  } else {
+                    // Something happened in setting up the request 
+                    // that triggered an Error
+                    console.log('Error', error.message);
+                  }
+                  //console.log(error.config);
+                  console.log('ERROR pinFileToIPFS')
             }                        
             res.redirect(301, '/tools');    
         })
