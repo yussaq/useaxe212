@@ -1,51 +1,50 @@
 # useaxe212
 Graphical User Interface NFT collections tool, 
-generate unique images from attribute, creates the metadata and uploaded to IPFS (Pinata)
+set design attribute or layer image, generate image and auto create metadata ready for upload to ipfs (pinata)
 without seeing the beautiful code inside ;). Happy creativity :)
 
-[![Twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/yussaqnf)
+[![Twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/yussaqnf) [![Youtube](https://img.shields.io/badge/Youtube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/playlist?list=PLCv_rFt7G0yOh9bb5oRe2X7FetMKLebwQ) [![Linkedin](https://img.shields.io/badge/Linkedin-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://id.linkedin.com/in/yussaq-nurfitrianto-0923936b)
         
 ![](useaxe212.gif)
 
 
 
 # Requirements:
-nodejs : https://nodejs.org/en/
+* nodejs : https://nodejs.org/en/
+* ffmpeg : https://ffmpeg.org/
 
 
+#### Installation nodejs linux:
 ```sh
 $ sudo apt update
 $ sudo apt install nodejs
 $ node -v
 ```
 
-Install ffmpeg : https://ffmpeg.org/download.html
-
-#### Windows
-```sh
-- Download https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
-- Extract the file
-- rename folder to ffmpeg
-- move ffmpeg folder to c:\ffmpeg
-- open cmd as administrator
-- run the following command: setx /m PATH "C:\ffmpeg\bin;%PATH%"
-- restart computer.
-- open cmd and run the following command: ffmpeg -version
-```
-
-#### Linux
+#### Installation ffmpeg linux:
 ```sh
 $ sudo apt update
 $ sudo apt install ffmpeg
 $ ffmpeg -version
 ```
+#### Installation ffmpeg windows:
+```sh
+- Download https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
+- Extract file
+- Rename folder to ffmpeg
+- Move ffmpeg folder to c:\ffmpeg 
+- Open cmd as administrator
+- Type command: setx /m PATH "C:\ffmpeg\bin;%PATH%"
+- Restart computer.
+- Open cmd to check ffmpeg status, run the following command: ffmpeg -version
+```
 
-# Installation
+# Installation useaxes212
 
-- Download the latest release from repository:
+- Download from github repository:
 - Extract the archive
 - Open terminal/cmd 
-- Go to the folder and run the following command: 
+- Go to the folder extract file and run the following command: 
 
 ```sh
 npm install
