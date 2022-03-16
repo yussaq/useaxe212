@@ -4,3 +4,36 @@
     </p>
     <p class="mb-1">&copy; 022022 useaxe212, It's in your hands!</p>
 </div>
+
+
+<script type="text/javascript">
+    var copyBTCBtn = document.querySelector('#btnBTC');
+    copyBTCBtn.addEventListener('click', function(event) {
+        var copyBTC = document.querySelector('#inBTC');
+        copyBTC.focus();
+        copyBTC.select();
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copy to Clipboard ' + msg);
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+    });
+
+    var copyETHBtn = document.querySelector('#btnETH');
+    copyETHBtn.addEventListener('click', function(event) {
+        var copyETH = document.querySelector('#inETH');
+        copyETH.focus();
+        copyETH.select();
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copy to Clipboard ' + msg);
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+    });
+
+</script>
+

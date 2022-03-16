@@ -2,18 +2,40 @@
 <div class="collapse bg-dark" id="navbarToggleExternalContent">
     <div class="container">
         <div class="row">
-            <div class="col-sm-8 col-md-7 py-4">
+            <div class="col-sm-10 col-md-8 py-4">
                 <h4 class="text-white">About</h4>
-                <p class="text-muted">useaxe212 Graphical User Interface NFT collections tool, 
-                    generate unique images, creates the metadata and uploaded to IPFS (Pinata)</p>
-                </div>
-            <div class="col-sm-4 offset-md-1 py-4">
+                <p class="text-muted">
+                    Graphical User Interface NFT collections tool, 
+                    set design attribute or layer image, generate image and auto create metadata ready for upload to ipfs (pinata)
+                </p>
+                <div class="icons_container">
+                    <div class="icon facebook">
+                        <div class="tooltip"> Linkedin </div> <a href="https://id.linkedin.com/in/yussaq-nurfitrianto-0923936b" class="text-muted text-decoration-none" target="_blank" ><span><i class="fab fa-linkedin-in"></i></span></a>
+                    </div>
+                    <div class="icon twitter">
+                        <div class="tooltip"> Twitter </div> <a href="https://twitter.com/yussaqnf/" class="text-muted text-decoration-none" target="_blank" ><span><i class="fab fa-twitter"></i></span></a>
+                    </div>
+                    <div class="icon instagram">
+                        <div class="tooltip"> Instagram </div> <a href="https://www.instagram.com/yussaqnf/" class="text-muted text-decoration-none" target="_blank" ><span><i class="fab fa-instagram"></i></span></a>
+                    </div>
+                    <div class="icon github">
+                        <div class="tooltip"> Github </div> <a href="https://github.com/yussaq" class="text-muted text-decoration-none" target="_blank" ><span><i class="fab fa-github"></i></span></a>
+                    </div>
+                    <div class="icon youtube">
+                        <div class="tooltip"> Tiktok </div> <a href="https://www.tiktok.com/@yussaqnf" class="text-muted text-decoration-none" target="_blank" ><span><i class="fab fa-tiktok"></i></span></a>
+                    </div>
+                    <div class="icon youtube">
+                        <div class="tooltip"> YouTube </div> <a href="https://www.youtube.com/playlist?list=PLCv_rFt7G0yOh9bb5oRe2X7FetMKLebwQ" class="text-muted text-decoration-none" target="_blank" ><span><i class="fab fa-youtube"></i></span></a>
+                    </div>
+                </div>      
+            </div>
+            <div class="col-sm-4 col-md-3 offset-md-1 py-4">
                 <h4 class="text-white">Contact</h4>
                 <ul class="list-unstyled ">                    
-                    <li><a href="https://twitter.com/yussaqnf/" class="text-warning text-decoration-none" target="_blank"><i class='fa fab fa-twitter'></i> Follow on Twitter</a></li>
+                    <li><a href="https://t.me/yussaqnf/" class="text-warning text-decoration-none" target="_blank"><i class='fa fab fa-telegram'></i> Chat me</a></li>
                     <li><a href="https://mail.google.com/mail/?view=cm&source=mailto&to=[yussaq.nf@gmail.com]" class="text-warning text-decoration-none" target="_blank"><i class='fa far fa-envelope'></i> Email me</a></li>
-                    <li><a href="https://paypal.me/yussaq" class="text-warning text-decoration-none" target="_blank"><i class="fa-brands fa-paypal"></i> Paypal.me</a></li>
-                    <li><a href="#" class="text-warning text-decoration-none"><i class="fa-solid fa-wallet"></i> Wallet</a></li>                    
+                    <li><a href="https://paypal.me/yussaq" class="text-warning text-decoration-none" target="_blank"><i class="fa-brands fa-paypal"></i> Paypal me</a></li>
+                    <li><a href="#" class="text-warning text-decoration-none" data-bs-toggle="modal" data-bs-target="#walletModal"><i class="fa-solid fa-wallet"></i> Wallet me</a></li>                    
                 </ul>
             </div>
         </div>
@@ -39,5 +61,71 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
         </button>                              
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Donate Crypto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="clipboard-example align-items-center ">
+                <div class="input-group mb-3">
+                    
+                    <span class="input-group-text">BTC &nbsp;<i class="fab fa-btc"></i> </span>
+                    <input id="inBTC"
+                           type="text"
+                           class="form-control"
+                           placeholder="BTC Address..."
+                           aria-label="BTC Address"
+                           aria-describedby="btnBTC"
+                           value="14nkSUKHGniSDnv7d7hn3HSvvEow3BccpB"
+                           readonly
+                    >
+                    <button id="btnBTC"
+                            class="btn btn-secondary"
+                            type="button"
+                            data-clipboard-demo=""
+                            data-clipboard-target="#inBTC"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Copy to Clipboard"                               
+                    ><i class="fa-solid fa-copy"></i></button>
+                </div>
+            </div>
+
+            <div class="clipboard-example align-items-center ">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">ETH &nbsp;<i class="fa-brands fa-ethereum"></i></span>
+                    <input id="inETH"
+                           type="text"
+                           class="form-control"
+                           placeholder="ETH Address..."
+                           aria-label="ETH Address"
+                           aria-describedby="btnETH"
+                           value="0x878307ddee0316d47ba0ba4098e1609a0b6ee6bc"
+                           readonly
+                    >
+                    <button id="btnETH"
+                            class="btn btn-secondary"
+                            type="button"
+                            data-clipboard-demo=""
+                            data-clipboard-target="#inETH"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Copy to Clipboard"
+                    ><i class="fa-solid fa-copy"></i></button>
+                </div>
+            </div>            
+        </div>
+        <div class="modal-footer">
+            <span class="text-success"> Thanks for your donation </span>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa-solid fa-handshake"></i></button>
+        </div>
+    </div>
     </div>
 </div>
