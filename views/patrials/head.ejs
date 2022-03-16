@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/dist/css/bootstrap.css" >
 <link rel="stylesheet" href="/css/all.css" >
 <style>
-    .btn-circle {
+.btn-circle {
     width: 30px;
     height: 30px;
     padding: 6px 0px;
@@ -16,6 +16,110 @@
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
+}
+.icons_container {
+    display: inline-flex
+}
+
+.icons_container .icon {
+    margin: 0 10px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+}
+
+.icons_container .icon span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 19px;
+    height: 30px;
+    width: 30px;
+    background: #fff;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+}
+
+.icons_container .icon .tooltip {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    color: #fff;
+    padding: 7px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+}
+
+.icons_container .icon:hover .tooltip {
+    top: -50px;
+    opacity: 1;
+    pointer-events: auto
+}
+
+.icon .tooltip:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    background: #fff;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%) rotate(45deg);
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+}
+
+.icons_container .icon:hover span {
+    color: #fff
+}
+
+.icons_container .icon:hover span,
+.icons_container .icon:hover .tooltip {
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.4)
+}
+
+.icons_container .facebook:hover span,
+.icons_container .facebook:hover .tooltip,
+.icons_container .facebook:hover .tooltip:before {
+    background: #3B5999
+}
+
+.icons_container .twitter:hover span,
+.icons_container .twitter:hover .tooltip,
+.icons_container .twitter:hover .tooltip:before {
+    background: #46C1F6
+}
+
+.icons_container .instagram:hover span,
+.icons_container .instagram:hover .tooltip,
+.icons_container .instagram:hover .tooltip:before {
+    background: #e1306c
+}
+
+.icons_container .github:hover span,
+.icons_container .github:hover .tooltip,
+.icons_container .github:hover .tooltip:before {
+    background: #333
+}
+
+.icons_container .youtube:hover span,
+.icons_container .youtube:hover .tooltip,
+.icons_container .youtube:hover .tooltip:before {
+    background: #DE463B
 }
 </style>
 <script src="/dist/js/bootstrap.js"  crossorigin="anonymous"></script>
