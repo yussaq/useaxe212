@@ -87,6 +87,39 @@
             <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a
                     href="/docs/5.0/getting-started/introduction/">getting started guide</a>.</p>
         </div>
+        <button type="button" class="btn btn-primary" onclick="test('btc')" >Close</button>
     </footer>
+
+
+
+    <script type="text/javascript">
+
+        function test(id) { 
+            alert('sssssssssssssss '+ id);
+        }
+        function copy(id) {
+            var copyText = document.getElementById(id).innerHTML;
+            copyText.select();
+            alert("Copied the text: " + copyText.value);
+            document.execCommand("copy");
+
+        }
+
+        function copy1(text, target) {
+setTimeout(function() {
+$('#copied_tip').remove();
+}, 800);
+$(target).append("<div class='tip' id='copied_tip'>Copied!</div>");
+var input = document.createElement('input');
+input.setAttribute('value', text);
+document.body.appendChild(input);
+input.select();
+var result = document.execCommand('copy');
+document.body.removeChild(input)
+return result;
+}
+
+    </script>
+
 </body>
 </html>
