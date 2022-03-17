@@ -15,9 +15,29 @@
                     <% data.forEach(function(item) { %>
                         <div class="col">
                             <div class="card shadow-sm">
-                                <img data-bs-toggle="modal" data-bs-target="#imageModal"  src="/asset/collections/<%= item.edition %>.<%= item.type %>" class="card-img-top" alt="<%= item.edition %>.<%= item.type %>">
+                                <img data-bs-toggle="modal" name="edition_<%= item.edition %>" data-attributes="item.attributes" data-bs-target="#imageModal"  src="/asset/collections/<%= item.edition %>.<%= item.type %>" class="card-img-top img-collection" alt="<%= item.edition %>.<%= item.type %>">
                                 <div class="card-body">
                                     <div><small class="text-muted"><%= item.name %></small></div>
+                                    <div id="edition_<%= item.edition %>" class="d-none">   
+                                    <p class="text-center"> <%= item.name %> </p>
+                                    <table class="table table-bordered ">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col" class="text-end col-md-6">Trait type</th>
+                                            <th scope="col">Value</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% item.attributes.forEach(function(attribute) { %>
+                                            <tr>
+                                                <td class="text-end"><%= attribute.trait_type %></td>
+                                                <td><%= attribute.value %></td>
+                                            </tr>
+                                            <% }) %>
+                                          
+                                        </tbody>
+                                      </table>   
+                                    </div>                                 
                                 </div>
                              </div>                            
                         </div>               
@@ -64,11 +84,15 @@
    
     <!-- Modal -->
     <div class="modal fade"  id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-lg">          
+        <div class="modal-dialog  modal-lg modal-dialog-centered modal-dialog-scrollable">          
         <div class="modal-content">
-            <div class="modal-body text-center">
-                <div class="item"><img class="rounded mx-auto d-block" id="imgSrc" src="" /></div>
+            <div class="modal-body ">
+                <div class="item text-center"><img class="rounded mx-auto d-block" id="imgSrc" src="" /></div>
+                <div id="attribute" ></div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>            
         </div>
         </div>
     </div>
@@ -80,7 +104,21 @@
 <script >   
     const imageModalEl = document.getElementById('imageModal');
     imageModalEl.addEventListener('show.bs.modal', function(event) {
-        document.getElementById('imgSrc').src = event.relatedTarget.src;
+        document.getElementById('imgSrc').src = event.relatedTarget.src;        
+        //document.getElementById("attribute").innerHTML = event.relatedTarget.attributes;
     });
+
+
+    document.querySelectorAll('.img-collection').forEach(item => {
+        item.addEventListener('click', event => {
+            event.preventDefault();
+            console.log(event.target.getAttribute("name"));
+            const attb = event.target.getAttribute("name");
+            document.getElementById("attribute").innerHTML = document.getElementById(attb).innerHTML;
+            //alert(JSON.stringify(event))
+            //attribute
+        })
+    })
+
 </script>
 </html>
