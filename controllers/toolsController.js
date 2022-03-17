@@ -396,7 +396,6 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
             var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
             console.log('Upload Image : '+ percentCompleted + '%');
         }
-
     }        
     instanceAxios
         .post(urljson, dataJson, config)
