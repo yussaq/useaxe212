@@ -25,6 +25,7 @@ app.use(express.static(`${basePath}/node_modules/bootstrap`))
 app.use(express.static(`${basePath}/node_modules/@fortawesome/fontawesome-free/`))
 app.use(express.static(`${basePath}/node_modules/dropzone`))
 app.use(express.static(`${basePath}/public`))
+app.use(express.static(`${basePath}/public/asset/json`))
 app.use(express.static(`${basePath}/views`))
 app.use(express.static(`${basePath}/tmp`))
 
