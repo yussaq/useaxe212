@@ -3,6 +3,7 @@ Graphical User Interface NFT collections tool,
 set design attribute or layer image, generate image and auto create metadata ready for upload to ipfs (pinata)
 without seeing the beautiful code inside ;). Happy creativity :)
 
+# Tutoral [![Youtube](https://img.shields.io/badge/Youtube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=9owBpSa15aE)
 
 ![](useaxe212.gif)
 
@@ -38,7 +39,7 @@ $ ffmpeg -version
 - Open cmd to check ffmpeg status, run the following command: ffmpeg -version
 ```
 
-# Installation useaxes212
+# Installation useaxe212
 
 - Download from github repository:
 - Extract the archive
