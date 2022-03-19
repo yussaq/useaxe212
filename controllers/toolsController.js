@@ -367,6 +367,12 @@ const instanceAxios = axios.create({
     
 
 const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {    
+    const fileSetting = `${basePath}/public/asset/json/_setting.json`;
+    const dataSetting = JSON.parse(fs.readFileSync(fileSetting));
+
+    const fileipfsMetadata = `${basePath}/public/asset/json/_ipfsMetadata.json`;
+    const dataipfsMetadata = JSON.parse(fs.readFileSync(fileipfsMetadata));
+
     const urljson = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     const srcjson = `${basePath}/public/asset/json/metadata`;
     let dataJson = new FormData();
@@ -378,8 +384,9 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
         });
     })
     const partJson = maxPart+1
+    const partname = dataSetting[0].initial+'_part_'+partJson+'_metadata'
     const metadataJson = JSON.stringify({
-        name: dataSetting[0].initial+'_part_'+partJson+'_metadata',
+        name: partname, // dataSetting[0].initial+'_part_'+partJson+'_metadata',
         keyvalues: {
             uploadedby: 'useaxe212',
             total : editionIdx.length
@@ -400,7 +407,17 @@ const pinMetadataToIPFS = (async (maxPart,editionIdx,ApiKey,SecretApiKey) => {
     instanceAxios
         .post(urljson, dataJson, config)
         .then(function (response) {
-            console.log('Upload metadata done');                                 
+            try{
+                console.log('Upload metadata done');
+                dataipfsMetadata.push({ part: partname, IpfsHash: response.data.IpfsHash,'editions': editionIdx});
+                fs.writeFileSync(fileipfsMetadata, JSON.stringify(dataipfsMetadata, null, 2), (err) => { 
+                    if (err) throw err; 
+                })
+
+            }catch(err){
+                console.log(err)
+                console.log('ERROR : pinMetadataToIPFS')
+            }
             //res.redirect(301, '/tools');    
         })
         .catch(function (error) {
@@ -418,7 +435,10 @@ const pinFileToIPFS = (async (req, res, next) => {
     const fileSetting = `${basePath}/public/asset/json/_setting.json`;
     const dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
     const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;    
-    const dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));    
+    const dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));
+    const fileIpfsImages = `${basePath}/public/asset/json/_ipfsImages.json`;    
+    const dataIpfsImages = JSON.parse(fs.readFileSync(fileIpfsImages));
+
     const filterItem = dataMetadata.filter(({ status }) => status !== 'upload')
     const maxPart = Math.max(...dataMetadata.map(o => o.part).filter(part => part > 0 ), 0);
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
@@ -439,8 +459,9 @@ const pinFileToIPFS = (async (req, res, next) => {
     }
     console.log(`Proccess upload ${editionIdx.length} images ....`)
     var partImage = maxPart+1
+    const partImagename = dataSetting[0].initial+'_part_'+partImage+'_images'
     const metadata = JSON.stringify({
-        name: dataSetting[0].initial+'_part_'+partImage+'_images',
+        name: partImagename, //dataSetting[0].initial+'_part_'+partImage+'_images',
         keyvalues: {
             uploadedby: 'useaxe212',
             total : req.body.quantity
@@ -470,7 +491,11 @@ const pinFileToIPFS = (async (req, res, next) => {
             })
             try{
                 updateSingleMetadata(response.data.IpfsHash, editionIdx)
-                //console.log('updateSingleMetadata')
+                //console.log(JSON.stringify(rsIpfsHashImg, null, 2));
+                dataIpfsImages.push({ 'part': partImagename, 'IpfsHash': response.data.IpfsHash,'editions': editionIdx });
+                fs.writeFileSync(fileIpfsImages, JSON.stringify(dataIpfsImages, null, 2), (err) => { 
+                    if (err) throw err; 
+                })
             }catch(err){
                 console.log(err)
                 console.log('ERROR : pinFileToIPFS')
