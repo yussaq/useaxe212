@@ -51,12 +51,14 @@ const  {
     getTools,
     postGenerate,
     postReset,
+    postClearGenerate,
     pinFile,
     pinFileToIPFS 
 } = require('../controllers/toolsController.js')
 router.get('/tools', getTools)
 router.post('/tools/generate', postGenerate)
 router.post('/tools/reset', postReset)
+router.post('/tools/cleargenerate', postClearGenerate)
 router.post('/tools/pin-file-to-ipfs', pinFileToIPFS)
 
 
