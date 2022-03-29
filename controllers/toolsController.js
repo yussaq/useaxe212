@@ -21,7 +21,11 @@ const FormData = require('form-data');
 const fs = require("fs");
 const ffmpeg = require('fluent-ffmpeg');
 const basePathConverter = require('base-path-converter');
-    
+
+const xl = require('excel4node');
+const wb = new xl.Workbook();
+const ws = wb.addWorksheet('metadata');
+
 const data = [];
 /* 
 const fileSetting = `${basePath}/public/asset/json/_setting.json`;
@@ -49,21 +53,49 @@ const getTools = ((req, res) => {
     });
 })
 
+const camelCaseToStringSpace = (s) => {
+    return s
+        .split(/(?=[A-Z])/)
+        .map((p) => {
+            return p[0].toUpperCase() + p.slice(1);
+        })
+        .join(' ');
+}
+
 const objMetadata = ((edition, type, rowdata) => {
     const fileSetting = `${basePath}/public/asset/json/_setting.json`;
     var dataSetting = JSON.parse(fs.readFileSync(fileSetting)); 
+    if (dataSetting[0].imgname === null || dataSetting[0].imgname === undefined) { 
+        var layer_imgname = ''
+        var arr_layer_imgname = []        
+    } else {
+        var layer_imgname = dataSetting[0].imgname
+        var arr_layer_imgname = layer_imgname.split(',')
+    }
     attributesList = [];
+    subname = '';
+    subname1 = '';
     rowAttribute = getFileName(rowdata);
     rowAttribute.forEach((val,index)  => {  
+        attribute_type = path.basename(path.dirname(val))
+        attribute_value = path.basename(val).split('.').slice(0, -1).join('.')
+
+        if (attribute_type === arr_layer_imgname[0]) {
+            subname = camelCaseToStringSpace(attribute_value)
+        }
+
+        if (attribute_type === arr_layer_imgname[1]) {
+            subname1 = camelCaseToStringSpace(attribute_value)
+        }        
         attributesList.push({
-            trait_type: path.basename(path.dirname(val)),
-            value: path.basename(val).split('.').slice(0, -1).join('.'),            
+            trait_type: attribute_type, // path.basename(path.dirname(val)),
+            value: attribute_value, // path.basename(val).split('.').slice(0, -1).join('.'),            
         });
     })
     var DNA = crypto.createHmac("sha256", rowdata.attributes).digest("hex");
     var obj = {}
     var objlayer = {}
-    obj['name'] = '#'+edition
+    obj['name'] = `${camelCaseToStringSpace(dataSetting[0].name)} #${edition} ${subname} ${subname1}`  //'#'+edition
     obj['description'] = dataSetting[0].description
     obj['image'] = 'https://'
     obj['dna'] = DNA
@@ -79,27 +111,39 @@ const objMetadata = ((edition, type, rowdata) => {
 const createMetadata = ((rowdata) => {
     const fileSetting = `${basePath}/public/asset/json/_setting.json`;
     var dataSetting = JSON.parse(fs.readFileSync(fileSetting));    
+    if (dataSetting[0].imgname === null || dataSetting[0].imgname === undefined) { 
+        var layer_imgname = ''
+    } else {
+        layer_imgname = dataSetting[0].imgname
+    }
     attributesList = [];
+    subname = '';
     rowAttribute = rowdata['attributes'];
-    rowAttribute.forEach((val,index)  => {  
+    rowAttribute.forEach((val,index)  => {
+        attribute_type = path.basename(path.dirname(val))
+        attribute_value = path.basename(val).split('.').slice(0, -1).join('.')
+
+        if (attribute_type === layer_imgname) {
+            subname = attribute_value
+        }
         attributesList.push({
-            trait_type: path.basename(path.dirname(val)),
-            value: path.basename(val).split('.').slice(0, -1).join('.'),            
+            trait_type: attribute_type, //path.basename(path.dirname(val)),
+            value: attribute_value, // path.basename(val).split('.').slice(0, -1).join('.'),            
         });
     })
 
     var key = 'attributes'// hash1;
     var obj = {}
     var objlayer = {}
-    obj['name'] = dataSetting[0].name
+    obj['name'] = `${dataSetting[0].name} ${subname}`
     obj['description'] = dataSetting[0].description
     obj['image'] = 'https://'
     obj['dna'] = rowdata['dna']
     obj['edition'] = rowdata['edition']
     obj['type'] = rowdata['type']
     obj['date'] = Date.now()
-    obj['creator'] = dataSetting[0].creator
-    //obj['status'] = rowdata['status']; //opt: (generate, upload, publish)   
+    obj['creator'] = dataSetting[0].creator 
+
     obj['attributes'] = attributesList
     obj['compiler'] = 'useaxes212'
     return obj
@@ -212,19 +256,30 @@ const postGenerate = (async (req, res, next) => {
         //console.log('The file has been saved!'); 
     })
     var metadataJson = `${basePath}/public/asset/json/_metadata.json`;   
-    fs.writeFile(metadataJson, JSON.stringify(dataMetadata, null, 2), (err) => {
+/* 
+    fs.writeFileSync(metadataJson, JSON.stringify(dataMetadata, null, 2), (err) => {
         if (err) console.log(err);
     });
-    
+ */ 
+
+    try {
+        fs.writeFileSync(metadataJson, JSON.stringify(dataMetadata, null, 2))
+        console.log("File written successfully");
+    } catch(err) {
+        console.error(err);
+    }    
+    jsontoexcel()
     //updatePermutation = dataPermutation
     console.log('Generate done')
     res.redirect(301,'/');
 })
 
 const postReset = (async(req, res, next) => {
-    var metadataJson    = `${basePath}/public/asset/json/_metadata.json`;
-    var settingJson      = `${basePath}/public/asset/json/_setting.json`;    
-    var permutationJson  = `${basePath}/public/asset/json/_permutation.json`;
+    var metadataJson     = `${basePath}/public/asset/json/_metadata.json`
+    var settingJson      = `${basePath}/public/asset/json/_setting.json` 
+    var permutationJson  = `${basePath}/public/asset/json/_permutation.json`
+    var ipfsImagesJson   = `${basePath}/public/asset/json/_ipfsImages.json`
+    var ipfsMetadataJson = `${basePath}/public/asset/json/_ipfsMetadata.json`
     const dirattributes  = `${basePath}/public/asset/attributes/`
     const dircollections = `${basePath}/public/asset/collections/`
     const dirmetadata    = `${basePath}/public/asset/json/metadata/`    
@@ -258,7 +313,12 @@ const postReset = (async(req, res, next) => {
     fs.writeFile(metadataJson, JSON.stringify(datacollections), (err) => {
         if (err)
         console.log(err);
-    });  
+    });
+    
+    fs.writeFile(ipfsImagesJson, JSON.stringify([]), (err) => {
+        if (err)
+        console.log(err);
+    });    
 
     try {
         if (fs.existsSync(dirattributes)) {
@@ -341,9 +401,83 @@ const postReset = (async(req, res, next) => {
     //res.redirect(301,'/setting');
 })
 
-const show_a_message = () => {
-    console.log("I was waiting for two seconds!");
-};
+const postClearGenerate = (async(req, res, next) => {
+    var metadataJson     = `${basePath}/public/asset/json/_metadata.json`
+    var settingJson      = `${basePath}/public/asset/json/_setting.json` 
+    var permutationJson  = `${basePath}/public/asset/json/_permutation.json`
+    var ipfsImagesJson   = `${basePath}/public/asset/json/_ipfsImages.json`
+    var ipfsMetadataJson = `${basePath}/public/asset/json/_ipfsMetadata.json`
+    const dirattributes  = `${basePath}/public/asset/attributes/`
+    const dircollections = `${basePath}/public/asset/collections/`
+    const dirmetadata    = `${basePath}/public/asset/json/metadata/`    
+
+    var dataPermutation = [];
+    fs.writeFile(permutationJson, JSON.stringify(dataPermutation), (err) => {
+        if (err)
+        console.log(err);
+    });    
+
+    var datacollections = [];
+    fs.writeFile(metadataJson, JSON.stringify(datacollections), (err) => {
+        if (err)
+        console.log(err);
+    });
+    
+    fs.writeFile(ipfsImagesJson, JSON.stringify([]), (err) => {
+        if (err)
+        console.log(err);
+    });    
+
+    try {
+        if (fs.existsSync(dircollections)) {
+            fs.statSync(dircollections);
+            //console.log('file or directory exists');
+            fs.rmdirSync(dircollections, { recursive: true },(err) => {
+                if (err) {
+                    throw err;
+                }    
+                console.log(`dircollections is deleted!`);
+                return true;
+            });
+        }
+    }
+    catch (err) {
+        if (err.code === 'ENOENT') {
+        console.log('file or dircollections does not exist');
+        }
+    }
+
+    try {
+        if (fs.existsSync(dirmetadata)) {        
+        fs.statSync(dirmetadata);
+        //console.log('file or directory exists');
+        fs.rmdirSync(dirmetadata,{ recursive: true }, (err) => {
+            if (err) {
+                throw err;
+            }    
+            console.log(`dirmetadata is deleted!`);
+            return true;
+        });
+        }
+    }
+    catch (err) {
+        if (err.code === 'ENOENT') {
+        console.log('file or directory does not exist');
+        }
+    }     
+
+    if (!fs.existsSync(`${basePath}/public/asset/collections`)) {
+        fs.mkdirSync(`${basePath}/public/asset/collections/`);
+        console.log(`dircollections created`);
+    }
+
+    if (!fs.existsSync(`${basePath}/public/asset/json/metadata`)) {
+        fs.mkdirSync(`${basePath}/public/asset/json/metadata/`);
+        console.log(`dirmetadata created`);
+    }    
+    res.redirect('/setting');
+    //res.redirect(301,'/setting');
+})
 
 const updateSingleMetadata = (IpfsHash, editionIdx) => {
     //const urlipfs = `ipfs://gateway.pinata.cloud/ipfs/${IpfsHash}`
@@ -534,10 +668,38 @@ const pinFileToIPFS = (async (req, res, next) => {
         });    
 });
 
+const jsontoexcel = () => {
+    const fileMetadata = `${basePath}/public/asset/json/_metadata.json`;      
+    var dataMetadata = JSON.parse(fs.readFileSync(fileMetadata));    
+    ws.cell(1, 1).string('EDITION');
+    ws.cell(1, 2).string('NAME');
+    ws.cell(1, 3).string('DESCRIPTION');
+    ws.cell(1, 4).string('TRAIT_TYPE');
+    ws.cell(1, 5).string('VALUE');
+    
+    let rowIndex = 2;
+    dataMetadata.forEach( record => {
+    //    let columnIndex = 1;
+        ws.cell(rowIndex,1).number(record ['edition'])
+        ws.cell(rowIndex,2).string(record ['name'])
+        ws.cell(rowIndex,3).string(record ['description'])
+        atribute = record ['attributes']
+        atribute.forEach( attr => {
+            ws.cell(rowIndex,4).string(attr ['trait_type'])
+            ws.cell(rowIndex,5).string(attr ['value'])
+            rowIndex++;        
+        })        
+        rowIndex++;
+    });     
+    wb.write(`${basePath}/public/asset/json/_metadata.xlsx`);
+};
+
 module.exports = {
     getTools,
     postGenerate,
     postReset,
+    postClearGenerate,
     createMetadata,
-    pinFileToIPFS
+    pinFileToIPFS,
+    jsontoexcel
 }
