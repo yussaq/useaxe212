@@ -38,8 +38,9 @@ const getSetting = ((req, res, next) => {
             description : 'my collection',
             quantity : 10,
             ipfs : 'https://',
-            creator: 'Yussaq NF',
+            creator: 'My Name',
             attributes : 'background',
+            imgname : '',
             ffmpeg : '/usr/bin/ffmpeg' // "c:\\ffmpeg\\bin\\ffmpeg.exe" //linux-> /usr/bin/ffmpeg
         }];
         data=newdata; 
@@ -62,6 +63,7 @@ const updateSetting = ((req, res, next) => {
         ipfs :req.body.ipfs,
         creator: req.body.creator,
         attributes : req.body.attributes,
+        imgname : req.body.imgname,
         ffmpeg : req.body.ffmpeg
     };
   
