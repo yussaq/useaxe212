@@ -3,7 +3,17 @@ Graphical User Interface NFT collections tool,
 set design attribute or layer image, generate image and auto create metadata ready for upload to ipfs (pinata)
 without seeing the beautiful code inside ;). Happy creativity :)
 
-# Tutoral [![Youtube](https://img.shields.io/badge/Youtube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=9owBpSa15aE)
+### Features:
+- Set design attribute base on layers images
+- Generate images/animations
+- Create metadata 
+- Upload to ipfs (pinata)
+
+### In Planing:
+- Add tools/information to create a smart contract
+### Tutorial [![Youtube](https://img.shields.io/badge/Youtube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=9owBpSa15aE) please [![Subcribe](https://img.shields.io/badge/Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCFLwu6tx3wDUtPxswHdV_QQ?view_as=subscriber?sub_confirmation=1) to support app updates to make it even better, thanks.
+
+
 
 ![](useaxe212.gif)
 
