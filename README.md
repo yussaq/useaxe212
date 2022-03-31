@@ -1,7 +1,5 @@
 # useaxe212
-Graphical User Interface NFT collections tool, 
-set design attribute or layer image, generate image and auto create metadata ready for upload to ipfs (pinata)
-without seeing the beautiful code inside ;). Happy creativity :)
+NFT Collections Tool generate Images/Animations via browser, set design attribute or layer image, generate image and auto create metadata ready for upload to ipfs (pinata)
 
 ### Features:
 - Set design attribute base on layers images
