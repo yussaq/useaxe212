@@ -21,6 +21,11 @@
         }
     });
 
+    var generateBtn = document.querySelector('#generateBtn');
+    generateBtn.addEventListener('click', function(event) {
+        window.open("https://www.youtube.com/channel/UCFLwu6tx3wDUtPxswHdV_QQ?sub_confirmation=1", "child-window");
+    });
+
     var copyETHBtn = document.querySelector('#btnETH');
     copyETHBtn.addEventListener('click', function(event) {
         var copyETH = document.querySelector('#inETH');
