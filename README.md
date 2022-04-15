@@ -64,7 +64,8 @@ npm run start
 open browser and goto [http://localhost:2022](http://localhost:2022/) 
 
 
-[![Twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/yussaqnf) [![Telegram](https://img.shields.io/badge/Telegram-green?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/yussaqnf) [![Youtube](https://img.shields.io/badge/Youtube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/playlist?list=PLCv_rFt7G0yOh9bb5oRe2X7FetMKLebwQ) [![Linkedin](https://img.shields.io/badge/Linkedin-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://id.linkedin.com/in/yussaq-nurfitrianto-0923936b) [![Instagram](https://img.shields.io/badge/Instagram-purple?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/yussaq.nf/)
+
+[![Twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/yussaqnf) [![Telegram](https://img.shields.io/badge/Telegram-green?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/yussaqnf) [![Youtube](https://img.shields.io/badge/Youtube-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/playlist?list=PLCv_rFt7G0yOh9bb5oRe2X7FetMKLebwQ) [![Linkedin](https://img.shields.io/badge/Linkedin-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://id.linkedin.com/in/yussaq-nurfitrianto-0923936b) [![Instagram](https://img.shields.io/badge/Instagram-purple?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/yussaqnf/)
 [![Website](https://img.shields.io/badge/Website-blue?style=for-the-badge&logo=www&logoColor=white)](https://yussaq-nf.com)
 
 
